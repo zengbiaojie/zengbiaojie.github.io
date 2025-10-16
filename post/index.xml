@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>小 z 的金屋</title>
+    <link>https://zz.hanhan.live/post/</link>
+    <description>Recent content from 小 z 的金屋</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    
+    <managingEditor>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</managingEditor>
+    <webMaster>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</webMaster>
+    
+    <copyright>本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！</copyright>
+    
+    <lastBuildDate>Thu, 09 Oct 2025 14:57:52 +0800</lastBuildDate>
+    
+    
+    <atom:link href="https://zz.hanhan.live/post/index.xml" rel="self" type="application/rss&#43;xml" />
+    
+
+    
+    
+
+    <item>
+      <title>【书籍阅读】【动手学强化学习】强化学习基础篇 - 多臂老虎机</title>
+      <link>https://zz.hanhan.live/post/reforcement_learning/</link>
+      <pubDate>Thu, 09 Oct 2025 14:57:52 &#43;0800</pubDate>
+      <author>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</author>
+      <guid>https://zz.hanhan.live/post/reforcement_learning/</guid>
+      <description>
+        <![CDATA[<h1>【书籍阅读】【动手学强化学习】强化学习基础篇 - 多臂老虎机</h1><p>作者：zengbiaojie & zhoujuan（1046059314@qq.com）</p>
+        
+          <h2 id="多臂老虎机mab">
+<a class="header-anchor" href="#%e5%a4%9a%e8%87%82%e8%80%81%e8%99%8e%e6%9c%bamab"></a>
+多臂老虎机（MAB）
+</h2><p>多臂老虎机可以看作是一个简易版的强化学习问题，其中不存在状态，只有动作与奖励。</p>
+<h3 id="问题定义">
+<a class="header-anchor" href="#%e9%97%ae%e9%a2%98%e5%ae%9a%e4%b9%89"></a>
+问题定义
+</h3><p>在一个 $ K $ 根拉杆的多臂老虎机中，每个拉杆都对应于一个奖励的概率分布 $ \R $ ，拉下拉杆就能从该拉杆的对应的奖励概率分布中获得一个奖励 $ r $ 。在每个拉杆的奖励概率分布未知的情况下，从头开始尝试，目标是在 $ T $ 次拉杆后获得尽可能高的累积奖励。</p>
+        
+        <hr><p>本文2025-10-09首发于<a href='https://zz.hanhan.live/'>小 z 的金屋</a>，最后修改于2025-10-09</p>]]>
+      </description>
+      
+        <category>书籍阅读</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>【书籍阅读】【模式识别与机器学习】贝叶斯学习基础</title>
+      <link>https://zz.hanhan.live/post/pattern_recognize/</link>
+      <pubDate>Tue, 12 Aug 2025 00:37:52 &#43;0800</pubDate>
+      <author>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</author>
+      <guid>https://zz.hanhan.live/post/pattern_recognize/</guid>
+      <description>
+        <![CDATA[<h1>【书籍阅读】【模式识别与机器学习】贝叶斯学习基础</h1><p>作者：zengbiaojie & zhoujuan（1046059314@qq.com）</p>
+        
+          <h2 id="贝叶斯公式">
+<a class="header-anchor" href="#%e8%b4%9d%e5%8f%b6%e6%96%af%e5%85%ac%e5%bc%8f"></a>
+贝叶斯公式
+</h2><p>贝叶斯公式也叫“逆概率公式”，是为了计算事件的“逆向概率”。对于一个事件的“正向概率”是指根据建模假设中隐含的因果关系评估观测数据的概率分布，而“逆向概率”则是根据观测数据反推相关的隐变量的概率分布。</p>
+        
+        <hr><p>本文2025-08-12首发于<a href='https://zz.hanhan.live/'>小 z 的金屋</a>，最后修改于2025-08-12</p>]]>
+      </description>
+      
+        <category>书籍阅读</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>【文章笔记】【模型融合】Merging Multi-Task Models via Weight-Ensembling Mixture of Experts</title>
+      <link>https://zz.hanhan.live/post/merging-multi-task-models-via-weight-ensembling-mixture-of-experts/</link>
+      <pubDate>Mon, 04 Aug 2025 15:03:52 &#43;0800</pubDate>
+      <author>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</author>
+      <guid>https://zz.hanhan.live/post/merging-multi-task-models-via-weight-ensembling-mixture-of-experts/</guid>
+      <description>
+        <![CDATA[<h1>【文章笔记】【模型融合】Merging Multi-Task Models via Weight-Ensembling Mixture of Experts</h1><p>作者：zengbiaojie & zhoujuan（1046059314@qq.com）</p>
+        
+          <p><a href="https://arxiv.org/abs/2402.00433v2">Merging Multi-Task Models via Weight-Ensembling Mixture of Experts</a></p>
+<h2 id="1文章内容总结">
+<a class="header-anchor" href="#1%e6%96%87%e7%ab%a0%e5%86%85%e5%ae%b9%e6%80%bb%e7%bb%93"></a>
+1.文章内容总结
+</h2><h3 id="11-背景和挑战">
+<a class="header-anchor" href="#11-%e8%83%8c%e6%99%af%e5%92%8c%e6%8c%91%e6%88%98"></a>
+1.1 背景和挑战
+</h3><p><strong>背景</strong>：深度学习的快速发展推进了向微调大型预训练模型转变用于下游任务，而非从头开始训练。初始在大规模数据集上训练过后，预训练模型具备了出色的常识，并能熟练识别和处理大型数据模式。这些模型在下游任务上微调后能获取特定任务的知识。在这种情况下，将多个特定任务的模型merge成一个统一的模型成为了知识转移和多任务学习的有效、可扩展的策略。</p>
+        
+        <hr><p>本文2025-08-04首发于<a href='https://zz.hanhan.live/'>小 z 的金屋</a>，最后修改于2025-08-04</p>]]>
+      </description>
+      
+        <category>文章阅读</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>【文章笔记】【模型融合】Editing Models with Task Arithmetic</title>
+      <link>https://zz.hanhan.live/post/taskarithmetic/</link>
+      <pubDate>Mon, 04 Aug 2025 14:50:52 &#43;0800</pubDate>
+      <author>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</author>
+      <guid>https://zz.hanhan.live/post/taskarithmetic/</guid>
+      <description>
+        <![CDATA[<h1>【文章笔记】【模型融合】Editing Models with Task Arithmetic</h1><p>作者：zengbiaojie & zhoujuan（1046059314@qq.com）</p>
+        
+          <p><a href="https://arxiv.org/abs/2212.04089">Editing Models with Task Arithmetic</a></p>
+<h2 id="1-文章总结及思考">
+<a class="header-anchor" href="#1-%e6%96%87%e7%ab%a0%e6%80%bb%e7%bb%93%e5%8f%8a%e6%80%9d%e8%80%83"></a>
+1. 文章总结及思考
+</h2><h2 id="11-背景">
+<a class="header-anchor" href="#11-%e8%83%8c%e6%99%af"></a>
+1.1 背景
+</h2><p>    <strong>背景和动机</strong>：科研人员经常会想要在预训练之后再去编辑模型，来提高在下游任务上的性能，减少偏差或不符合期待的行为，让模型对齐人类偏好，或用新的信息更新模型。</p>
+        
+        <hr><p>本文2025-08-04首发于<a href='https://zz.hanhan.live/'>小 z 的金屋</a>，最后修改于2025-08-04</p>]]>
+      </description>
+      
+        <category>文章阅读</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>【文章笔记】【模型融合】AdaMerging</title>
+      <link>https://zz.hanhan.live/post/adamergin/</link>
+      <pubDate>Mon, 04 Aug 2025 14:32:52 &#43;0800</pubDate>
+      <author>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</author>
+      <guid>https://zz.hanhan.live/post/adamergin/</guid>
+      <description>
+        <![CDATA[<h1>【文章笔记】【模型融合】AdaMerging</h1><p>作者：zengbiaojie & zhoujuan（1046059314@qq.com）</p>
+        
+          <p><a href="https://arxiv.org/abs/2310.02575v2">AdaMerging: Adaptive Model Merging for Multi-Task Learning</a></p>
+<h1 id="1文章总结及思考">
+<a class="header-anchor" href="#1%e6%96%87%e7%ab%a0%e6%80%bb%e7%bb%93%e5%8f%8a%e6%80%9d%e8%80%83"></a>
+1.文章总结及思考
+</h1><h2 id="11-背景动机和挑战">
+<a class="header-anchor" href="#11-%e8%83%8c%e6%99%af%e5%8a%a8%e6%9c%ba%e5%92%8c%e6%8c%91%e6%88%98"></a>
+1.1 背景（动机和挑战）
+</h2><p> 当前的merge是让多个微调好的模型merge成一个模型后去执行MTL，但这存在几个问题：</p>
+        
+        <hr><p>本文2025-08-04首发于<a href='https://zz.hanhan.live/'>小 z 的金屋</a>，最后修改于2025-08-04</p>]]>
+      </description>
+      
+        <category>文章阅读</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>【文章笔记】【模型融合】Model Merging in Pre-training of Large Language Models</title>
+      <link>https://zz.hanhan.live/post/modelmerging/</link>
+      <pubDate>Mon, 04 Aug 2025 12:40:52 &#43;0800</pubDate>
+      <author>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</author>
+      <guid>https://zz.hanhan.live/post/modelmerging/</guid>
+      <description>
+        <![CDATA[<h1>【文章笔记】【模型融合】Model Merging in Pre-training of Large Language Models</h1><p>作者：zengbiaojie & zhoujuan（1046059314@qq.com）</p>
+        
+          <p><a href="https://arxiv.org/abs/2505.12082v1">Model Merging in Pre-training of Large Language Models</a></p>
+<h2 id="摘要">
+<a class="header-anchor" href="#%e6%91%98%e8%a6%81"></a>
+摘要
+</h2><p>模型merge已成为增强大型语言模型的一种有前景的技术，尽管它在大规模预训练中的应用仍然相对未被探索。<strong>本文对预训练过程中的模型merge技术进行了全面的研究</strong>。通过对从数百万到超过1000亿个参数的密集和混合专家（MoE）架构的广泛实验，我们证明，merge以恒定学习率训练的检查点不仅可以显著提高性能，还可以准确预测退火行为。这些改进<strong>不仅提高了模型开发的效率，还显著降低了培训成本</strong>。我们对合并策略和超参数的详细消融研究为潜在机制提供了新的见解，同时揭示了新的应用。通过全面的实验分析，我们为有效的模型合并提供了开源社区实用的预训练指南。</p>
+        
+        <hr><p>本文2025-08-04首发于<a href='https://zz.hanhan.live/'>小 z 的金屋</a>，最后修改于2025-08-04</p>]]>
+      </description>
+      
+        <category>文章阅读</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>【文章笔记】【语义相似性】Advancing Semantic Textual Similarity Modeling</title>
+      <link>https://zz.hanhan.live/post/advancing-semantic-textual-similarity-modeling/</link>
+      <pubDate>Sun, 03 Aug 2025 01:32:52 &#43;0800</pubDate>
+      <author>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</author>
+      <guid>https://zz.hanhan.live/post/advancing-semantic-textual-similarity-modeling/</guid>
+      <description>
+        <![CDATA[<h1>【文章笔记】【语义相似性】Advancing Semantic Textual Similarity Modeling</h1><p>作者：zengbiaojie & zhoujuan（1046059314@qq.com）</p>
+        
+          <p><a href="https://arxiv.org/abs/2406.05326">Advancing Semantic Textual Similarity Modeling: A Regression Framework with Translated ReLU and Smooth K2 Loss</a></p>
+<h2 id="abstract">
+<a class="header-anchor" href="#abstract"></a>
+Abstract
+</h2><p>BERT和RoBERTa的出现使得 STS（Sentence Textual Similarity）得到显著突破，并且对比学习的应用使得STS得到更好的性能。但对比学习的方法难以利用细粒度的标注信息，以及要求大批量的大小以防止模型崩溃。上述挑战都使得 STS 任务受到细微相似度以及在资源有限时的表现。而Sentence-Bert一定程度的解决了上述问题，但Sentence-Bert将 STS 建模为分类任务，作者任务这忽视了语义相似的进步性。因此本文采用回归框架，并提出两个简单有效的loss函数，最终通过实验验证其有效性。</p>
+        
+        <hr><p>本文2025-08-03首发于<a href='https://zz.hanhan.live/'>小 z 的金屋</a>，最后修改于2025-08-03</p>]]>
+      </description>
+      
+        <category>文章阅读</category>
+      
+    </item>
+    
+    
+
+    <item>
+      <title>Hugo 配置个人博客</title>
+      <link>https://zz.hanhan.live/post/a/</link>
+      <pubDate>Tue, 29 Jul 2025 03:55:52 &#43;0800</pubDate>
+      <author>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</author>
+      <guid>https://zz.hanhan.live/post/a/</guid>
+      <description>
+        <![CDATA[<h1>Hugo 配置个人博客</h1><p>作者：zengbiaojie & zhoujuan（1046059314@qq.com）</p>
+        
+          <h2 id="环境准备">
+<a class="header-anchor" href="#%e7%8e%af%e5%a2%83%e5%87%86%e5%a4%87"></a>
+环境准备
+</h2><h3 id="hugo">
+<a class="header-anchor" href="#hugo"></a>
+Hugo
+</h3><p>官网：<a href="https://gohugo.io/">https://gohugo.io/</a></p>
+<p>Github: <a href="https://github.com/gohugoio/hugo">gohugoio/Hugo</a></p>
+<p>进入Releases下载最新版即可
+<img src="/post/a/1753768016687.png" alt="1753768016687"></p>
+<h2 id="博客搭建">
+<a class="header-anchor" href="#%e5%8d%9a%e5%ae%a2%e6%90%ad%e5%bb%ba"></a>
+博客搭建
+</h2><h3 id="创建博客项目">
+<a class="header-anchor" href="#%e5%88%9b%e5%bb%ba%e5%8d%9a%e5%ae%a2%e9%a1%b9%e7%9b%ae"></a>
+创建博客项目
+</h3><p>解压下载得到的 Hugo 压缩包，并得到其中的 <code>hugo.exe</code> 文件</p>
+<p>创建一个新的文件夹作为个人博客文件夹</p>
+        
+        <hr><p>本文2025-07-29首发于<a href='https://zz.hanhan.live/'>小 z 的金屋</a>，最后修改于2025-07-29</p>]]>
+      </description>
+      
+        <category>教程</category>
+      
+    </item>
+    
+  </channel>
+</rss>

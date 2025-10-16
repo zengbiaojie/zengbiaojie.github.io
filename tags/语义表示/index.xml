@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>语义表示 on 小 z 的金屋</title>
+    <link>https://zz.hanhan.live/tags/%E8%AF%AD%E4%B9%89%E8%A1%A8%E7%A4%BA/</link>
+    <description>Recent content from 小 z 的金屋</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    
+    <managingEditor>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</managingEditor>
+    <webMaster>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</webMaster>
+    
+    <copyright>本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！</copyright>
+    
+    <lastBuildDate>Sun, 03 Aug 2025 01:32:52 +0800</lastBuildDate>
+    
+    
+    <atom:link href="https://zz.hanhan.live/tags/%E8%AF%AD%E4%B9%89%E8%A1%A8%E7%A4%BA/index.xml" rel="self" type="application/rss&#43;xml" />
+    
+
+    
+    
+
+    <item>
+      <title>【文章笔记】【语义相似性】Advancing Semantic Textual Similarity Modeling</title>
+      <link>https://zz.hanhan.live/post/advancing-semantic-textual-similarity-modeling/</link>
+      <pubDate>Sun, 03 Aug 2025 01:32:52 &#43;0800</pubDate>
+      <author>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</author>
+      <guid>https://zz.hanhan.live/post/advancing-semantic-textual-similarity-modeling/</guid>
+      <description>
+        <![CDATA[<h1>【文章笔记】【语义相似性】Advancing Semantic Textual Similarity Modeling</h1><p>作者：zengbiaojie & zhoujuan（1046059314@qq.com）</p>
+        
+          <p><a href="https://arxiv.org/abs/2406.05326">Advancing Semantic Textual Similarity Modeling: A Regression Framework with Translated ReLU and Smooth K2 Loss</a></p>
+<h2 id="abstract">
+<a class="header-anchor" href="#abstract"></a>
+Abstract
+</h2><p>BERT和RoBERTa的出现使得 STS（Sentence Textual Similarity）得到显著突破，并且对比学习的应用使得STS得到更好的性能。但对比学习的方法难以利用细粒度的标注信息，以及要求大批量的大小以防止模型崩溃。上述挑战都使得 STS 任务受到细微相似度以及在资源有限时的表现。而Sentence-Bert一定程度的解决了上述问题，但Sentence-Bert将 STS 建模为分类任务，作者任务这忽视了语义相似的进步性。因此本文采用回归框架，并提出两个简单有效的loss函数，最终通过实验验证其有效性。</p>
+        
+        <hr><p>本文2025-08-03首发于<a href='https://zz.hanhan.live/'>小 z 的金屋</a>，最后修改于2025-08-03</p>]]>
+      </description>
+      
+        <category>文章阅读</category>
+      
+    </item>
+    
+  </channel>
+</rss>

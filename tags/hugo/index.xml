@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hugo on 小 z 的金屋</title>
+    <link>https://zz.hanhan.live/tags/hugo/</link>
+    <description>Recent content from 小 z 的金屋</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    
+    <managingEditor>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</managingEditor>
+    <webMaster>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</webMaster>
+    
+    <copyright>本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！</copyright>
+    
+    <lastBuildDate>Tue, 29 Jul 2025 03:55:52 +0800</lastBuildDate>
+    
+    
+    <atom:link href="https://zz.hanhan.live/tags/hugo/index.xml" rel="self" type="application/rss&#43;xml" />
+    
+
+    
+    
+
+    <item>
+      <title>Hugo 配置个人博客</title>
+      <link>https://zz.hanhan.live/post/a/</link>
+      <pubDate>Tue, 29 Jul 2025 03:55:52 &#43;0800</pubDate>
+      <author>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</author>
+      <guid>https://zz.hanhan.live/post/a/</guid>
+      <description>
+        <![CDATA[<h1>Hugo 配置个人博客</h1><p>作者：zengbiaojie & zhoujuan（1046059314@qq.com）</p>
+        
+          <h2 id="环境准备">
+<a class="header-anchor" href="#%e7%8e%af%e5%a2%83%e5%87%86%e5%a4%87"></a>
+环境准备
+</h2><h3 id="hugo">
+<a class="header-anchor" href="#hugo"></a>
+Hugo
+</h3><p>官网：<a href="https://gohugo.io/">https://gohugo.io/</a></p>
+<p>Github: <a href="https://github.com/gohugoio/hugo">gohugoio/Hugo</a></p>
+<p>进入Releases下载最新版即可
+<img src="/post/a/1753768016687.png" alt="1753768016687"></p>
+<h2 id="博客搭建">
+<a class="header-anchor" href="#%e5%8d%9a%e5%ae%a2%e6%90%ad%e5%bb%ba"></a>
+博客搭建
+</h2><h3 id="创建博客项目">
+<a class="header-anchor" href="#%e5%88%9b%e5%bb%ba%e5%8d%9a%e5%ae%a2%e9%a1%b9%e7%9b%ae"></a>
+创建博客项目
+</h3><p>解压下载得到的 Hugo 压缩包，并得到其中的 <code>hugo.exe</code> 文件</p>
+<p>创建一个新的文件夹作为个人博客文件夹</p>
+        
+        <hr><p>本文2025-07-29首发于<a href='https://zz.hanhan.live/'>小 z 的金屋</a>，最后修改于2025-07-29</p>]]>
+      </description>
+      
+        <category>教程</category>
+      
+    </item>
+    
+  </channel>
+</rss>
