@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>机器学习 on 小 z 的金屋</title>
+    <link>https://zz.hanhan.live/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
+    <description>Recent content from 小 z 的金屋</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    
+    <managingEditor>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</managingEditor>
+    <webMaster>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</webMaster>
+    
+    <copyright>本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！</copyright>
+    
+    <lastBuildDate>Tue, 12 Aug 2025 00:37:52 +0800</lastBuildDate>
+    
+    
+    <atom:link href="https://zz.hanhan.live/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss&#43;xml" />
+    
+
+    
+    
+
+    <item>
+      <title>【书籍阅读】【模式识别与机器学习】贝叶斯学习基础</title>
+      <link>https://zz.hanhan.live/post/pattern_recognize/</link>
+      <pubDate>Tue, 12 Aug 2025 00:37:52 &#43;0800</pubDate>
+      <author>1046059314@qq.com (zengbiaojie &amp; zhoujuan)</author>
+      <guid>https://zz.hanhan.live/post/pattern_recognize/</guid>
+      <description>
+        <![CDATA[<h1>【书籍阅读】【模式识别与机器学习】贝叶斯学习基础</h1><p>作者：zengbiaojie & zhoujuan（1046059314@qq.com）</p>
+        
+          <h2 id="贝叶斯公式">
+<a class="header-anchor" href="#%e8%b4%9d%e5%8f%b6%e6%96%af%e5%85%ac%e5%bc%8f"></a>
+贝叶斯公式
+</h2><p>贝叶斯公式也叫“逆概率公式”，是为了计算事件的“逆向概率”。对于一个事件的“正向概率”是指根据建模假设中隐含的因果关系评估观测数据的概率分布，而“逆向概率”则是根据观测数据反推相关的隐变量的概率分布。</p>
+        
+        <hr><p>本文2025-08-12首发于<a href='https://zz.hanhan.live/'>小 z 的金屋</a>，最后修改于2025-08-12</p>]]>
+      </description>
+      
+        <category>书籍阅读</category>
+      
+    </item>
+    
+  </channel>
+</rss>

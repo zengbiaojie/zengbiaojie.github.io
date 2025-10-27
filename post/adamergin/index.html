@@ -1,0 +1,727 @@
+<!doctype html>
+<html
+  lang="zh-cn" 
+  data-theme-mode="auto"
+  >
+  <head><meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, shrink-to-fit=no"
+/><title>
+  【文章笔记】【模型融合】AdaMerging | zengbiaojie & zhoujuan
+</title>
+<meta
+  name="description"
+  content="我们是人工智能领域大科学家！"
+/><script>
+  window.siteConfig = JSON.parse("{\"anchor_icon\":null,\"base\":\"https://zz.hanhan.live/\",\"clipboard\":{\"copyright\":{\"count\":50,\"enable\":false,\"license_type\":\"by-nc-sa\"},\"fail\":{\"en\":\"Copy failed (ﾟ⊿ﾟ)ﾂ\",\"ja\":\"コピー失敗 (ﾟ⊿ﾟ)ﾂ\",\"pt-br\":\"Falha ao copiar (ﾟ⊿ﾟ)ﾂ\",\"zh-cn\":\"复制失败 (ﾟ⊿ﾟ)ﾂ\",\"zh-tw\":\"複製失敗 (ﾟ⊿ﾟ)ﾂ\"},\"success\":{\"en\":\"Copy successfully (*^▽^*)\",\"ja\":\"コピー成功 (*^▽^*)\",\"pt-br\":\"Copiado com sucesso (*^▽^*)\",\"zh-cn\":\"复制成功 (*^▽^*)\",\"zh-tw\":\"複製成功 (*^▽^*)\"}},\"code_block\":{\"expand\":20},\"icon_font\":\"4552607_0khxww3tj3q9\",\"outdate\":{\"daysago\":180,\"enable\":false,\"message\":{\"en\":\"This article was last updated on {time}. Please note that the content may no longer be applicable.\",\"ja\":\"この記事は最終更新日：{time}。記載内容が現在有効でない可能性がありますのでご注意ください。\",\"pt-br\":\"Este artigo foi atualizado pela última vez em {time}. Observe que o conteúdo pode não ser mais aplicável.\",\"zh-cn\":\"本文最后更新于 {time}，请注意文中内容可能已不适用。\",\"zh-tw\":\"本文最後更新於 {time}，請注意文中內容可能已不適用。\"}}}");
+  
+</script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="preload"
+  as="style"
+  href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7cNoto%20Serif%20SC:400,400italic,700,700italic%7c&amp;display=swap"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7cNoto%20Serif%20SC:400,400italic,700,700italic%7c&amp;display=swap"
+  media="print"
+  onload="this.media='all'"
+/>
+<link
+    rel="preload"
+    href="//at.alicdn.com/t/c/font_4552607_0khxww3tj3q9.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin="anonymous"
+  /><link rel="stylesheet" href="/css/loader.min.ac746e154f756f8220326eeb52a719f142ab038be5a8ddf30ea5ef15ef2356ea.css" />
+<meta property="og:type" content="website" />
+  <meta property="og:title" content="【文章笔记】【模型融合】AdaMerging | zengbiaojie & zhoujuan" />
+  <meta
+    property="og:description"
+    content="我们是人工智能领域大科学家！"
+  />
+  <meta property="og:url" content="https://zz.hanhan.live/post/adamergin/" />
+  <meta
+    property="og:site_name"
+    content="小 z 的金屋"
+  />
+  <meta
+    property="og:image"
+    content="/"
+  />
+  <meta property="article:author" content="zengbiaojie & zhoujuan" />
+  <meta property="article:published_time" content="2025-08-04T14:32:52&#43;08:00" />
+  <meta property="article:modified_time" content="2025-08-04T14:32:52&#43;08:00" /><meta property="article:tag" content="模型融合" /><meta name="twitter:card" content="summary" />
+  <meta name="twitter:image" content="/" />
+<link rel="shortcut icon" href="/favicon.ico"><link rel="stylesheet" href="/css/main.min.6b3f96d0d04f98678149e3cf7e64b2c567b840637aada3b4698b20028152a942.css" />
+<link
+    rel="preload"
+    as="style"
+    href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css"
+    integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei&#43;Zx/1oA/0l8ysE" crossorigin="anonymous"onload="this.onload=null;this.rel='stylesheet'"
+  /><link
+    rel="preload"
+    as="style"
+    href="https://npm.webcache.cn/katex@0.16.22/dist/katex.min.css"
+    integrity="sha384-5TcZemv2l/9On385z///&#43;d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP" crossorigin="anonymous"onload="this.onload=null;this.rel='stylesheet'"
+  /><script
+    src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js"
+    integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script><link
+    rel="stylesheet"
+    href="https://npm.webcache.cn/@reimujs/aos@0.1.2/dist/aos.css"
+    integrity="sha384-GMRP93c6Hkz9JVKGAuRR3nTS7M07RwPgTFenXiosjq2VbVgvdDNcz1g6Mkj8AONa" crossorigin="anonymous"/></head>
+  <body><div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi rotate"><svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+          M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg></div><div class="loading-word">新建了别催了...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script><div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+<div id="lang-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+本文章没有找到对应的语言版本
+</div>
+<div id="heatmap-tooltip"></div><div id="container">
+      <div id="wrap"><div id="header-nav">
+  <nav id="main-nav"><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/">首页</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/archives">归档</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/about">经历</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/plan">计划</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/friend">友链</a>
+      </span><a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav"></nav></div>
+<header id="header"><picture></picture><img crossorigin="anonymous" fetchpriority="high" src="/images/banner.png" alt="【文章笔记】【模型融合】AdaMerging"><div id="header-outer">
+    <div id="header-title"><a href="/" id="logo">
+            <h1 data-aos="slide-up">【文章笔记】【模型融合】AdaMerging</h1>
+          </a><h2 id="subtitle-wrap" data-aos="slide-down"></h2></div>
+  </div>
+</header><div id="content"
+          
+          class="sidebar-right"  ><aside id="sidebar"><div class="sidebar-wrapper wrap-sticky">
+    <div
+      class="sidebar-wrap"
+      data-aos="fade-up"
+    ><div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#11-背景动机和挑战">1.1 背景（动机和挑战）</a></li>
+    <li><a href="#12-文章工作横向对比及难点处理">1.2 文章工作、横向对比及难点处理</a>
+      <ul>
+        <li><a href="#121-效果总结">1.2.1 效果总结</a></li>
+        <li><a href="#122-横向对比">1.2.2 横向对比</a></li>
+        <li><a href="#123-难点处理">1.2.3 难点处理</a></li>
+      </ul>
+    </li>
+    <li><a href="#13-实验">1.3 实验</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#21-multi-task-learning什么是多任务学习">2.1 Multi-Task Learning：什么是多任务学习？</a></li>
+    <li><a href="#22-grid-search传统的网格搜索是怎么做的">2.2 grid search：传统的网格搜索是怎么做的？</a></li>
+    <li><a href="#23-combinatorial-optimization-search-什么是组合优化搜索">2.3 combinatorial optimization search: 什么是组合优化搜索？</a></li>
+    <li><a href="#24-spearman-correlation-coefficient斯皮尔曼相关系数是什么">2.4 Spearman correlation coefficient:斯皮尔曼相关系数是什么？</a></li>
+    <li><a href="#25-task-arithmetic什么是任务算法">2.5 Task Arithmetic:什么是任务算法？</a></li>
+    <li><a href="#26-ties-merging-什么是领带合并">2.6 Ties-Merging: 什么是领带合并？</a></li>
+    <li><a href="#27-什么是fisher-mergingfisher-information-matrix">2.7 什么是Fisher Merging？Fisher information matrix？</a></li>
+    <li><a href="#28-模型之间的l2距离是指什么">2.8 模型之间的L2距离是指什么？</a></li>
+    <li><a href="#29-什么是pem-composition">2.9 什么是PEM Composition？</a></li>
+    <li><a href="#210-test-data-distribution-shifts是什么">2.10 test data distribution shifts是什么?</a></li>
+    <li><a href="#211-vit和bert">2.11 ViT和BERT？</a></li>
+    <li><a href="#212-test-time-adaption">2.12 test-time adaption?</a></li>
+    <li><a href="#213-shannon-entropy">2.13 Shannon entropy？</a></li>
+    <li><a href="#214-motion-blurimpulse-noisegaussian-noisepixelatespattercontrast-and-jpeg-compression分别是什么类型的污染">2.14 Motion Blur，Impulse Noise，Gaussian Noise，Pixelate，Spatter，Contrast and JPEG Compression分别是什么类型的污染？</a></li>
+  </ul>
+</nav>
+  </div>
+</div></div>
+          <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img
+    data-src="/avatar/avatar.jpg"
+    data-sizes="auto"
+    alt="zengbiaojie &amp; zhoujuan"
+    class="lazyload"
+  />
+  <div class="sidebar-author-name">zengbiaojie &amp; zhoujuan</div>
+  <div class="sidebar-description">我们是人工智能领域大科学家！</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div><div class="sidebar-state-number">8</div>
+  </div>
+  <a class="sidebar-state-category" href="/categories/" aria-label="sidebar-state-category-link">
+    <div>分类</div>
+    <div class="sidebar-state-number">
+      3
+    </div>
+  </a>
+  <a class="sidebar-state-tag" href="/tags/" aria-label="sidebar-state-tag-link">
+    <div>标签</div>
+    <div class="sidebar-state-number">12</div>
+  </a>
+</div>
+<div class="sidebar-social"></div>
+<div class="sidebar-menu"><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/"
+        aria-label="首页"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">首页</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/archives"
+        aria-label="归档"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">归档</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/about"
+        aria-label="经历"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">经历</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/plan"
+        aria-label="计划"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">计划</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/friend"
+        aria-label="友链"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">友链</div>
+    </div></div>
+</div><div class="sidebar-btn-wrapper" style="position:static">
+            <div class="sidebar-toc-btn current"></div>
+            <div class="sidebar-common-btn"></div>
+          </div></div>
+  </div>
+
+  <div class="sidebar-widget"></div></aside>
+<section id="main"><article
+  class="h-entry article"
+  itemprop="blogPost"
+  itemscope
+  itemtype="https://schema.org/BlogPosting"
+>
+  <div
+    class="article-inner"
+    data-aos="fade-up"
+  >
+    <div class="article-meta"><div class="article-date">
+  <span
+    class="article-date-link"
+    data-aos="zoom-in"
+  >
+    <time datetime="2025-08-04 14:32:52 &#43;0800 CST" itemprop="datePublished"
+      >2025-08-04</time
+    >
+    <time style="display: none;" id="post-update-time"
+      >2025-08-04</time
+    >
+  </span>
+</div>
+<div class="article-category"><a
+      class="article-category-link"
+      href="/categories/%e6%96%87%e7%ab%a0%e9%98%85%e8%af%bb"
+      data-aos="zoom-in"
+      >文章阅读</a
+    ></div>
+</div>
+    <div class="hr-line"></div><div class="e-content article-entry" itemprop="articleBody"><p><a href="https://arxiv.org/abs/2310.02575v2">AdaMerging: Adaptive Model Merging for Multi-Task Learning</a></p>
+<h1 id="1文章总结及思考">
+<a class="header-anchor" href="#1%e6%96%87%e7%ab%a0%e6%80%bb%e7%bb%93%e5%8f%8a%e6%80%9d%e8%80%83"></a>
+1.文章总结及思考
+</h1><h2 id="11-背景动机和挑战">
+<a class="header-anchor" href="#11-%e8%83%8c%e6%99%af%e5%8a%a8%e6%9c%ba%e5%92%8c%e6%8c%91%e6%88%98"></a>
+1.1 背景（动机和挑战）
+</h2><p> 当前的merge是让多个微调好的模型merge成一个模型后去执行MTL，但这存在几个问题：</p>
+<ol>
+<li>模型提供者通常只提供微调好的模型，但不提供原始训练数据。</li>
+<li>多个任务之间会有潜在的冲突以及复杂的相关性。</li>
+<li>当前基于任务向量的MTL方法比普通的加权平均效果好的多，但和传统的MTL之间仍然存在着明显的差距。</li>
+</ol>
+<p>因此挑战点在于<strong>如何在不使⽤原始训练数据的情况下更加有效的合并预训练模型</strong>，这篇paper提出了<strong>AdaMerging</strong>来解决这个问题。</p>
+<h2 id="12-文章工作横向对比及难点处理">
+<a class="header-anchor" href="#12-%e6%96%87%e7%ab%a0%e5%b7%a5%e4%bd%9c%e6%a8%aa%e5%90%91%e5%af%b9%e6%af%94%e5%8f%8a%e9%9a%be%e7%82%b9%e5%a4%84%e7%90%86"></a>
+1.2 文章工作、横向对比及难点处理
+</h2><h3 id="121-效果总结">
+<a class="header-anchor" href="#121-%e6%95%88%e6%9e%9c%e6%80%bb%e7%bb%93"></a>
+1.2.1 效果总结
+</h3><p><strong>效果</strong>：这篇paper主要是提出了一种新的自适应、无监督的merge方法&ndash;AdaMerging（Task-wise AdaMerging，Task-wise AdaMerging++，Layer-wise AdaMerging， Layer-wise AdaMerging++），由于merge过程中merge系数对模型效果影响较大，本文主要是对如何获取更优效果的merge系数方面做的工作，用熵的最小化作为替代目标来迭代改进模型合并系数，比起现有的普通加权平均、基于任务向量的MTL方法（例如Task Arithmetic和Ties-Merging）在性能、泛化能力、鲁棒性这三个方面都有明显更优的表现。</p>
+<p><strong>各方法效果对比</strong>：如图所示，该图表示系数$\lambda$对八项任务中各种MTL方法的平均准确率的影响。基于任务向量的Task Arithmetic和Ties-Merging在系数$\lambda=0.3$时达到了最佳的平均准确率，分别为69.1%和72.9%。传统的MTL和AdaMerging分别是88.9%和80.1%，佐证了文章说法。</p>
+<p><img src="/post/adamergin/d92efc1d-3ad2-4817-ab8b-514ad56f1ac2.png" alt="d92efc1d-3ad2-4817-ab8b-514ad56f1ac2"></p>
+<h3 id="122-横向对比">
+<a class="header-anchor" href="#122-%e6%a8%aa%e5%90%91%e5%af%b9%e6%af%94"></a>
+1.2.2 横向对比
+</h3><p>基于任务向量的研究忽略了处理各种模型集合时遇到的一个关键挑战，即控制模型合并过程的系数在实现最佳合并性能方面起着关键作用，这篇工作特别强调并解决了这个问题，以弥补性能差距。</p>
+<p>这篇工作和现有的基于任务向量的MTL方案的三个区别：</p>
+<ol>
+<li>以往的在所有任务向量之间共享一个合并系数，限制了任务向量组合的灵活性。AdaMerging在不同的任务甚至不同的层上采用不同的合并系数，大大提高了自适应的灵活性。</li>
+<li>现有的工作采用网格搜索合并系数，因此缺乏指导原则，在任务数量较大时成本高昂且不可行，这篇工作以熵最小化为替代目标，高效自动地优化合并系数。</li>
+<li>显著提高了多任务性能、对未知任务的泛化能力以及测试数据分布变化的鲁棒性。</li>
+</ol>
+<p><img src="/post/adamergin/efa00027-f918-4683-a9fb-a713c2ba11b3.png" alt="efa00027-f918-4683-a9fb-a713c2ba11b3"></p>
+<p>如图所示，图a为任务向量$T_k$的定义，$T_k$是通过在任务$k$的数据上微调好的模型权重$\theta_k$减去预训练权重$\theta_{pre}$获得。图b，对于Task Arithmetic，它将多个任务向量添加到预训练的权重$\theta_{pre}$中以执行MTL。在此基础上，图c中Ties-Merging表明一些任务向量的参数值可能是冗余的，或者参数符号可能存在冲突，直接合并会导致性能损失，因此它会去除一些冗余参数，使其不加入计算。Task Arithmetic和Ties-Merging都比简单的加权平均效果好得多，但和传统的MTL之间仍然存在着明显的差距。这篇文章认为基于任务向量的模型合并方法对合并系数$\lambda$非常敏感。不合适的$\lambda$将导致性能低于加权平均值，甚至达到不可接受的低精度。当任务数量较大时，网格搜索每个任务向量的合并系数代价高昂。因此他在合并系数这方面进行了细分，对不同的任务或是不同任务的不同层都会产生各自的merge系数。</p>
+<h3 id="123-难点处理">
+<a class="header-anchor" href="#123-%e9%9a%be%e7%82%b9%e5%a4%84%e7%90%86"></a>
+1.2.3 难点处理
+</h3><h4 id="1231-模型merge过程对merge系数敏感">
+<a class="header-anchor" href="#1231-%e6%a8%a1%e5%9e%8bmerge%e8%bf%87%e7%a8%8b%e5%af%b9merge%e7%b3%bb%e6%95%b0%e6%95%8f%e6%84%9f"></a>
+1.2.3.1 模型merge过程对merge系数敏感
+</h4><p>对于任务之间的潜在冲突以及复杂的相关性，这篇工作采用任务向量的方法去尽可能减少任务之间的冲突，保持任务之间的独立。但由于模型merge对merge系数非常敏感，因此这篇文章针对不同任务甚至不同层都进行了merge系数的细分。</p>
+<p><strong>Task-wise AdaMerging</strong>：如1.2.2图所示，Task-wise AdaMerging给每个任务向量$T_k$都分配了一个独立的合并系数$\lambda_k$，也就是：$\theta_{MTL}=\theta_{pre}+\sum_{k=1}^K\lambda_kT_k$. Task-wise AdaMerging允许对平均MTL性能有正向传导的任务向量$T_k$在$\theta_{MTL}$中占据更大的份额，而对MTL有害的任务向量$T_{k\prime}$则减少他对合并权重$\theta_{MTL}$的贡献，因此可以提高平均MTL性能。</p>
+<p><strong>Layer-wise AdaMerging</strong>：Task-wise AdaMerging可能不足以减轻任务向量的干扰。在深度神经网络模型中，每一层学到的信息都是不同的。。因此，在合并任务向量的时候，每个任务向量$T_k$的不同层的权重$\{T_k^1,T_k^2,...,T_k^L\}$也应该对最终的多任务权重$\theta_{MTL}$有不同的贡献$\{\lambda_k^1,\lambda_k^2,...,\lambda_k^L\}$。因此得到了：$\theta_{MTL} = \{\theta_{MTL}^l\}_{l=1}^L = \{\theta_{pre}^l + \sum_{k=1}^K\lambda_k^lT_k^l\}_{l=1}^L$，其中$L$代表层的数量。</p>
+<p>这篇文章在此基础上参考了Task Arithmetic和Ties-Merging的思想，认为他的这种方法也会有冗余值和符号冲突的问题，借鉴了Ties-Merging的处理方法得到了AdaMerging的变体，AdaMerging++，即在AdaMerging的基础上删除冗余值和符号冲突。相应的有Task-wise AdaMerging++和Layer-wise AdaMerging++，分别可以形式化为：$\theta_{MTL}=\theta_{pre}+\sum_{k=1}^K\lambda_k\Phi(T_k)$和$\theta_{MTL}=\{\theta_{pre}^l\}_{l=1}^L=\{\theta_{pre}^l + \sum_{k=1}^K\lambda_k^l\Phi(T_k^l)\}_{l=1}^L$.</p>
+<h4 id="1232-只有任务向量但是没有初始训练数据">
+<a class="header-anchor" href="#1232-%e5%8f%aa%e6%9c%89%e4%bb%bb%e5%8a%a1%e5%90%91%e9%87%8f%e4%bd%86%e6%98%af%e6%b2%a1%e6%9c%89%e5%88%9d%e5%a7%8b%e8%ae%ad%e7%bb%83%e6%95%b0%e6%8d%ae"></a>
+1.2.3.2 只有任务向量但是没有初始训练数据
+</h4><p>这篇工作解决这个问题用了test-time adaption,在看不见的测试数据上调整训练模型的权重，以应对测试数据上的分布变化。</p>
+<h2 id="13-实验">
+<a class="header-anchor" href="#13-%e5%ae%9e%e9%aa%8c"></a>
+1.3 实验
+</h2><p>在8个图像分类数据集上做了基于任务向量的多任务模型合并实验，实验基线主要分成两类，一类是非模型合并&ndash;个人的和传统的MTL，另一类是各种先进的模型合并方法，包括平均加权，Fisher Merging，Regmean，Task Arithmetic和Ties-Merging。具体数据对比见论文表格。</p>
+<h1 id="2知识点基础">
+<a class="header-anchor" href="#2%e7%9f%a5%e8%af%86%e7%82%b9%e5%9f%ba%e7%a1%80"></a>
+2.知识点基础
+</h1><h2 id="21-multi-task-learning什么是多任务学习">
+<a class="header-anchor" href="#21-multi-task-learning%e4%bb%80%e4%b9%88%e6%98%af%e5%a4%9a%e4%bb%bb%e5%8a%a1%e5%ad%a6%e4%b9%a0"></a>
+2.1 Multi-Task Learning：什么是多任务学习？
+</h2><p>    一种机器学习的方法，旨在同时学习多个相关任务，以提高模型在这些任务上的性能，核心思想是利用任务之间的相关性，共享模型参数，从而提高模型的学习效果和泛化能力。</p>
+<p>    优点：</p>
+<p>    <strong>1.提高泛化能力</strong>：通过同时学习多个任务，模型可以学习到更为通用的特征表示，从而提高在新任务上的泛化能力。</p>
+<p>    <strong>2.减少过拟合</strong>：多任务学习可以增加模型的正则化效果，减少过拟合风险。</p>
+<p>    <strong>3.提高学习效率</strong>：通过共享参数，模型可以更高效地利用数据，减少训练数据和计算资源。</p>
+<p>    挑战：</p>
+<p>    <strong>1.任务相关性</strong>：任务之间需要有一定的相关性，否则共享参数无法有效提高性能。</p>
+<p>    <strong>2.任务冲突</strong>：不同任务对模型参数可能会有不同的需求，导致任务之间的冲突。</p>
+<p>    <strong>3.平衡任务权重</strong>：需要合理分配每个任务的权重，以确保模型在所有任务上都能取得良好的性能。</p>
+<h2 id="22-grid-search传统的网格搜索是怎么做的">
+<a class="header-anchor" href="#22-grid-search%e4%bc%a0%e7%bb%9f%e7%9a%84%e7%bd%91%e6%a0%bc%e6%90%9c%e7%b4%a2%e6%98%af%e6%80%8e%e4%b9%88%e5%81%9a%e7%9a%84"></a>
+2.2 grid search：传统的网格搜索是怎么做的？
+</h2><p>一种调参手段；穷举搜索，在手动列出的所有候选的参数选择中，通过循环遍历，尝试每一种可能性，表现最好的参数就是最终的结果。（就是暴力搜）</p>
+<h2 id="23-combinatorial-optimization-search-什么是组合优化搜索">
+<a class="header-anchor" href="#23-combinatorial-optimization-search-%e4%bb%80%e4%b9%88%e6%98%af%e7%bb%84%e5%90%88%e4%bc%98%e5%8c%96%e6%90%9c%e7%b4%a2"></a>
+2.3 combinatorial optimization search: 什么是组合优化搜索？
+</h2><p>组合优化问题，Combinatorial Optimization Problem，简称COP，是一类在离散状态下求极值的最优化问题，组合优化搜索是在有限的解空间中寻找目标函数最优解的搜索方法。<code>&lt;font color=&quot;red&quot;&gt;</code><strong>网上帖子基本都是关于组合优化问题的定义和分类解释，关于这种搜索方式只提到是在有限解空间中进行的搜索最优解，具体怎么实现没找到，需要找人问下</strong> <code>&lt;/font&gt;</code></p>
+<h2 id="24-spearman-correlation-coefficient斯皮尔曼相关系数是什么">
+<a class="header-anchor" href="#24-spearman-correlation-coefficient%e6%96%af%e7%9a%ae%e5%b0%94%e6%9b%bc%e7%9b%b8%e5%85%b3%e7%b3%bb%e6%95%b0%e6%98%af%e4%bb%80%e4%b9%88"></a>
+2.4 Spearman correlation coefficient:斯皮尔曼相关系数是什么？
+</h2><p>相关系数是对两个变量的相对运动之间关系强度的统计量度。值范围在 -1.0 和 1.0 之间。-1.0 的相关性表示完全的负相关，而 1.0 的相关性表示完全的正相关。0.0 的相关性表明两个变量的移动之间没有线性关系。</p>
+<p>Pearson Correlation Coefficient（皮尔逊相关系数）是衡量两个变量$X$和$Y$之间线性相关性的统计量。他的值介于+1和-1之间。+1 完全正线性相关，0 是无线性相关，-1 是完全负线性相关。皮尔逊相关性只能评估两个连续变量之间的线性相关（仅当一个变量的变化与另一个变量的比例变化相关时，关系才是线性的）</p>
+<p>Spearman correlation coefficient是排序相关性（ranked values)的非参数度量，使用单调函数描述两个变量之间的关系的程度。Spearman相关性可以评估两个变量之间的单调关系一一有序，它基于每个变量的排名值(ranked value)而不是原始数据(original value)。如 orginal value（1,3,5,8,20,30，&hellip;） =&gt; ranked value (1,2,3,4,5,6&hellip;)</p>
+<p>总结，Pearson相当于捕获线性关系，Spearman相当于捕获单调性或一种上升下降的趋势。</p>
+<h2 id="25-task-arithmetic什么是任务算法">
+<a class="header-anchor" href="#25-task-arithmetic%e4%bb%80%e4%b9%88%e6%98%af%e4%bb%bb%e5%8a%a1%e7%ae%97%e6%b3%95"></a>
+2.5 Task Arithmetic:什么是任务算法？
+</h2><p>Task Arithmetic是一种用于合并和编辑预训练模型的方法，通过简单的算术操作（如加法、减法和取反）来调整模型的行为。这种方法的核心思想是利用任务向量（Task Vectors）来表示从预训练模型到特定任务微调后模型的权重变化。<code>&lt;font color=&quot;red&quot;&gt;</code>Task Arithmetic论文待看，计划5.19-5.30两周内看完 <code>&lt;/font&gt;</code><a href="https://arxiv.org/abs/2212.04089">[2212.04089] Editing Models with Task Arithmetic</a></p>
+<h2 id="26-ties-merging-什么是领带合并">
+<a class="header-anchor" href="#26-ties-merging-%e4%bb%80%e4%b9%88%e6%98%af%e9%a2%86%e5%b8%a6%e5%90%88%e5%b9%b6"></a>
+2.6 Ties-Merging: 什么是领带合并？
+</h2><p>Ties-Merging是一种用于合并多个特定任务模型的方法，旨在减少模型融合过程中的干扰，从而提高融合模型的性能。该方法的核心思想是通过三个步骤（Trim、Elect、Disjoint Merge）来解决冗余参数带来的干扰和参数符号不一致的干扰。</p>
+<h2 id="27-什么是fisher-mergingfisher-information-matrix">
+<a class="header-anchor" href="#27-%e4%bb%80%e4%b9%88%e6%98%affisher-mergingfisher-information-matrix"></a>
+2.7 什么是Fisher Merging？Fisher information matrix？
+</h2><p>Fisher信息矩阵$F_\theta$是一个衡量模型参数重要性的矩阵，反映了每个参数对模型输出的影响程度。Fisher信息矩阵的对角线元素表示每个参数的重要性。Fisher Merging是一种基于Fisher Information Matrix的模型合并技术，旨在通过加权平均的方式合并多个模型的参数，以提高合并后模型的性能。相关论文见<a href="https://arxiv.org/abs/2111.09832">[2111.09832] Merging Models with Fisher-Weighted Averaging</a>，<code>&lt;font color=&quot;blue&quot;&gt;</code>重要不紧急，打算看 <code>&lt;/font&gt;</code></p>
+<h2 id="28-模型之间的l2距离是指什么">
+<a class="header-anchor" href="#28-%e6%a8%a1%e5%9e%8b%e4%b9%8b%e9%97%b4%e7%9a%84l2%e8%b7%9d%e7%a6%bb%e6%98%af%e6%8c%87%e4%bb%80%e4%b9%88"></a>
+2.8 模型之间的L2距离是指什么？
+</h2><p>模型之间的L2距离（欧氏距离）是一种衡量两个模型参数差异的方法，提供了一个量化的方式来评估两个模型参数之间的相似性或差异性。公式：</p>
+$$
+L2\ Distance={\sqrt{\sum\limits_{i=1}^n(\theta_{1,i}-\theta_{2,i})^2}}
+$$<p>其中$n$为参数向量的长度。</p>
+<p>L1距离（曼哈顿距离）是一种衡量两个向量之间差异的方法，提供了一种量化的方式来评估两个向量（例如模型参数、特征向量等）之间的相似性或差异性。公式：</p>
+$$
+L1\ Distance=\sum\limits_{i=1}^n|a_i-b_i|
+$$<p>其中$n$是向量的长度，$a_i$和$b_i$分别是两个向量中的第$i$个元素。</p>
+<h2 id="29-什么是pem-composition">
+<a class="header-anchor" href="#29-%e4%bb%80%e4%b9%88%e6%98%afpem-composition"></a>
+2.9 什么是PEM Composition？
+</h2><p>Composing Parameter-Efficient Modules with Arithmetic Operations（PEM）方法旨在通过简单的算术操作（如加法、减法和取反）来组合参数高效的模块，从而实现高效的模型融合和编辑。这种方法的核心思想是利用任务向量（Task Vectors）来表示从预训练模型到特定任务微调后模型的权重变化，并通过算术操作来组合这些任务向量，以生成新的模型参数。</p>
+<p>git：<a href="https://github.com/hkust-nlp/PEM_composition">GitHub - hkust-nlp/PEM_composition: [NeurIPS 2023] Github repository for &quot;Composing Parameter-Efficient Modules with Arithmetic Operations&quot;</a></p>
+<p>对应应该是这篇工作：<a href="https://arxiv.org/abs/2306.14870">[2306.14870] Composing Parameter-Efficient Modules with Arithmetic Operations</a></p>
+<h2 id="210-test-data-distribution-shifts是什么">
+<a class="header-anchor" href="#210-test-data-distribution-shifts%e6%98%af%e4%bb%80%e4%b9%88"></a>
+2.10 test data distribution shifts是什么?
+</h2><p>测试数据分布变化（Test Data Distribution Shift）是指在机器学习模型的测试阶段，测试数据的分布与训练数据的分布不一致的情况。这种分布变化可能会导致模型性能下降，因为它在训练时学习到的模式可能不再适用于新的测试数据。变化原因可能是因为训练数据和测试数据数据收集时间不同、数据来源不同、数据预处理不同或是测试环境可能和训练环境不同等。</p>
+<h2 id="211-vit和bert">
+<a class="header-anchor" href="#211-vit%e5%92%8cbert"></a>
+2.11 ViT和BERT？
+</h2><p>ViT是一种基于 Transformer 架构的计算机视觉模型，通过将图像分割成 Patch 并使用自注意力机制捕捉长距离依赖关系，适用于图像分类、目标检测和语义分割等任务。</p>
+<p>BERT是一种基于 Transformer 架构的自然语言处理模型，通过 Masked Language Model 和 Next Sentence Prediction 任务进行预训练，适用于文本分类、问答、命名实体识别等任务。</p>
+<h2 id="212-test-time-adaption">
+<a class="header-anchor" href="#212-test-time-adaption"></a>
+2.12 test-time adaption?
+</h2><p>传统的模型训练后固定,在测试时无法改变。TTA是一种在模型部署后，利用少量未标记的测试数据来微调模型的技术。这种方法旨在提高模型在新环境或新任务中的适应性和性能，而无需重新训练整个模型。</p>
+<p>实现方法：</p>
+<p>1.伪标签生成：使用模型的预测结果为未标记的测试数据生成伪标签。这些伪标签可以用于微调模型。</p>
+<p>2.微调模型：使用生成的伪标签和少量未标记的测试数据来微调模型。微调过程通常只涉及模型的部分参数，以减少计算成本。</p>
+<p>3.迭代优化。</p>
+<h2 id="213-shannon-entropy">
+<a class="header-anchor" href="#213-shannon-entropy"></a>
+2.13 Shannon entropy？
+</h2><p>香农熵用于量化信息的不确定性或信息量，是衡量信息源或随机变量不确定性的度量。</p>
+<p><strong>定义</strong>：对于一个离散随机变量$X$，其可能取值为$\{x_1,x_2,...,x_n\}$，对应概率分别为$P(x_1),P(x_2),...,P(x_n)$，香农熵$H(X)$定义为：</p>
+$$
+H(X)=-\sum\limits_{i=1}^nP(x_i)logP(x_i)
+$$<p>其中，对数通常以2为底，此时熵的单位是bit。如果以 e 为底，单位是nat。</p>
+<h2 id="214-motion-blurimpulse-noisegaussian-noisepixelatespattercontrast-and-jpeg-compression分别是什么类型的污染">
+<a class="header-anchor" href="#214-motion-blurimpulse-noisegaussian-noisepixelatespattercontrast-and-jpeg-compression%e5%88%86%e5%88%ab%e6%98%af%e4%bb%80%e4%b9%88%e7%b1%bb%e5%9e%8b%e7%9a%84%e6%b1%a1%e6%9f%93"></a>
+2.14 Motion Blur，Impulse Noise，Gaussian Noise，Pixelate，Spatter，Contrast and JPEG Compression分别是什么类型的污染？
+</h2><p>Motion Blur（运动模糊）是由于相机或拍摄对象在拍摄过程中移动而产生的模糊效果。这种模糊通常是沿着运动方向的。运动模糊会降低图像的清晰度，使得边缘检测和特征提取变得更加困难。</p>
+<p>Impulse Noise（脉冲噪声）是一种随机出现的噪声，通常表现为图像中的一些像素值突然跳变到极值（如最大值或最小值）。这种噪声通常是由传感器故障或传输错误引起的。脉冲噪声会干扰图像的像素值，使得图像处理算法（如滤波和边缘检测）的性能下降。</p>
+<p>Gaussian Noise（高斯噪声）是一种统计噪声，其概率密度函数符合正态分布（高斯分布）。这种噪声通常是由传感器的热噪声或电子元件的随机波动引起的。高斯噪声会增加图像的噪声水平，使得图像处理算法（如平滑和特征提取）的性能下降。</p>
+<p>Pixelate（像素化）是将图像分割成较大的像素块，每个块内的像素值被设置为该块的平均值。这种效果通常用于降低图像的分辨率或保护隐私。像素化会降低图像的分辨率，使得图像处理算法（如超分辨率和特征提取）的性能下降。</p>
+<p>Spatter（飞溅）是一种模拟液体飞溅效果的干扰，通常用于图像增强或艺术效果。飞溅效果会干扰图像的背景和前景，使得图像分割和目标检测变得更加困难。</p>
+<p>Contrast（对比度）是指图像中明暗区域的差异。降低对比度会使图像的明暗差异减小，而增加对比度会使明暗差异增大。对比度调整会影响图像的视觉效果和处理算法的性能，如直方图均衡化和特征提取。</p>
+<p>JPEG Compression（JPEG 压缩）是一种有损压缩算法，通过减少图像中的冗余信息来减小文件大小。压缩过程中会引入一些失真。JPEG 压缩会降低图像的质量，使得图像处理算法（如边缘检测和特征提取）的性能下降。</p>
+</div>
+    <footer class="article-footer"><blockquote class="article-copyright"><p><strong><span class="icon-user icon"></span>本文作者：</strong>zengbiaojie &amp; zhoujuan @ 小 z 的金屋</p><p>
+      <strong><span class="icon-link icon"></span>本文链接：</strong><a href="https://zz.hanhan.live/post/adamergin/">https://zz.hanhan.live/post/adamergin/</a>
+    </p><p><strong><span class="icon-pencil icon"></span>本文标题：</strong>【文章笔记】【模型融合】AdaMerging</p><p><strong><span class="icon-calendar icon"></span>本文发布时间：</strong>2025-08-04 14:32:52</p><p>
+      
+      <strong><span class="icon-copyright icon"></span>本文版权：</strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！
+    </p>
+    <span class="icon-creative-commons article-copyright-bg"></span></blockquote>
+<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in">
+      <a
+        class="article-tag-list-link"
+        href="/tags/%e6%a8%a1%e5%9e%8b%e8%9e%8d%e5%90%88"
+        rel="tag"
+        >模型融合</a
+      >
+    </li></ul>
+</footer>
+  </div><nav
+    id="article-nav"
+    data-aos="fade-up"
+  ><div class="article-nav-link-wrap article-nav-link-left"><img
+              data-src="/images/cha2.png"
+              data-sizes="auto"
+              alt="【文章笔记】【模型融合】Model Merging in Pre-training of Large Language Models"
+              class="lazyload"
+            /><a href="/post/modelmerging/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">【文章笔记】【模型融合】Model Merging in Pre-training of Large Language Models</h3>
+      </div><div class="article-nav-link-wrap article-nav-link-right"><img
+              data-src="/images/cha5.png"
+              data-sizes="auto"
+              alt="【文章笔记】【模型融合】Editing Models with Task Arithmetic"
+              class="lazyload"
+            /><a href="/post/taskarithmetic/"></a>
+        <div class="article-nav-caption">后一篇</div>
+        <h3 class="article-nav-title">【文章笔记】【模型融合】Editing Models with Task Arithmetic</h3>
+      </div></nav></article></section>
+        </div><footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info"><div>
+      <span class="icon-copyright"></span>2020-2025<span class="footer-info-sep rotate"></span>
+      zengbiaojie &amp; zhoujuan
+    </div><div>
+        基于&nbsp;<a
+          href="https://gohugo.io/"
+          target="_blank"
+          >Hugo</a
+        >&nbsp; Theme.<a
+          href="https://github.com/D-Sketon/hugo-theme-reimu"
+          target="_blank"
+          >Reimu</a
+        >
+      </div><div>
+        <span class="icon-brush"
+          >&nbsp;24.9k</span
+        >
+        &nbsp;|&nbsp;
+        <span class="icon-coffee">&nbsp;00:52</span>
+      </div><div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv"
+          >总访问量&nbsp;<span
+            id="busuanzi_value_site_pv"
+          ></span
+        ></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv"
+          >总访客量&nbsp;<span
+            id="busuanzi_value_site_uv"
+          ></span
+        ></span>
+      </div></div>
+</footer>
+<div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div><div id="mask" class="hide"></div>
+      </div><nav id="mobile-nav">
+  <div class="sidebar-wrap"><div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#11-背景动机和挑战">1.1 背景（动机和挑战）</a></li>
+    <li><a href="#12-文章工作横向对比及难点处理">1.2 文章工作、横向对比及难点处理</a>
+      <ul>
+        <li><a href="#121-效果总结">1.2.1 效果总结</a></li>
+        <li><a href="#122-横向对比">1.2.2 横向对比</a></li>
+        <li><a href="#123-难点处理">1.2.3 难点处理</a></li>
+      </ul>
+    </li>
+    <li><a href="#13-实验">1.3 实验</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#21-multi-task-learning什么是多任务学习">2.1 Multi-Task Learning：什么是多任务学习？</a></li>
+    <li><a href="#22-grid-search传统的网格搜索是怎么做的">2.2 grid search：传统的网格搜索是怎么做的？</a></li>
+    <li><a href="#23-combinatorial-optimization-search-什么是组合优化搜索">2.3 combinatorial optimization search: 什么是组合优化搜索？</a></li>
+    <li><a href="#24-spearman-correlation-coefficient斯皮尔曼相关系数是什么">2.4 Spearman correlation coefficient:斯皮尔曼相关系数是什么？</a></li>
+    <li><a href="#25-task-arithmetic什么是任务算法">2.5 Task Arithmetic:什么是任务算法？</a></li>
+    <li><a href="#26-ties-merging-什么是领带合并">2.6 Ties-Merging: 什么是领带合并？</a></li>
+    <li><a href="#27-什么是fisher-mergingfisher-information-matrix">2.7 什么是Fisher Merging？Fisher information matrix？</a></li>
+    <li><a href="#28-模型之间的l2距离是指什么">2.8 模型之间的L2距离是指什么？</a></li>
+    <li><a href="#29-什么是pem-composition">2.9 什么是PEM Composition？</a></li>
+    <li><a href="#210-test-data-distribution-shifts是什么">2.10 test data distribution shifts是什么?</a></li>
+    <li><a href="#211-vit和bert">2.11 ViT和BERT？</a></li>
+    <li><a href="#212-test-time-adaption">2.12 test-time adaption?</a></li>
+    <li><a href="#213-shannon-entropy">2.13 Shannon entropy？</a></li>
+    <li><a href="#214-motion-blurimpulse-noisegaussian-noisepixelatespattercontrast-and-jpeg-compression分别是什么类型的污染">2.14 Motion Blur，Impulse Noise，Gaussian Noise，Pixelate，Spatter，Contrast and JPEG Compression分别是什么类型的污染？</a></li>
+  </ul>
+</nav>
+  </div>
+</div></div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img
+    data-src="/avatar/avatar.jpg"
+    data-sizes="auto"
+    alt="zengbiaojie &amp; zhoujuan"
+    class="lazyload"
+  />
+  <div class="sidebar-author-name">zengbiaojie &amp; zhoujuan</div>
+  <div class="sidebar-description">我们是人工智能领域大科学家！</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div><div class="sidebar-state-number">8</div>
+  </div>
+  <a class="sidebar-state-category" href="/categories/" aria-label="sidebar-state-category-link">
+    <div>分类</div>
+    <div class="sidebar-state-number">
+      3
+    </div>
+  </a>
+  <a class="sidebar-state-tag" href="/tags/" aria-label="sidebar-state-tag-link">
+    <div>标签</div>
+    <div class="sidebar-state-number">12</div>
+  </a>
+</div>
+<div class="sidebar-social"></div>
+<div class="sidebar-menu"><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/"
+        aria-label="首页"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">首页</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/archives"
+        aria-label="归档"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">归档</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/about"
+        aria-label="经历"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">经历</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/plan"
+        aria-label="计划"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">计划</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/friend"
+        aria-label="友链"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">友链</div>
+    </div></div>
+</div></div><div class="sidebar-btn-wrapper">
+        <div class="sidebar-toc-btn current"></div>
+        <div class="sidebar-common-btn"></div>
+      </div></nav>
+</div><script
+    src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js"
+    integrity="sha384-3gT/vsepWkfz/ff7PpWNUeMzeWoH3cDhm/A8jM7ouoAK0/fP/9bcHHR5kHq2nf&#43;e" crossorigin="anonymous"></script><script
+    src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js"
+    integrity="sha384-J08i8An/QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script><script
+    src="https://npm.webcache.cn/material-theme@1.0.0/dist/material-theme.umd.js"
+    integrity="sha384-vLev0II0HKFaxkcm&#43;/7kX5IGwVFBASkGchU311wmU/veIj2bB0UcBkQbW6yw2asK" crossorigin="anonymous"></script><script src="/js/main.js" integrity="" crossorigin="anonymous" ></script><script src="/js/aos.js" integrity="" crossorigin="anonymous" ></script><script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", aosInit);
+    } else {
+      aosInit();
+    }
+  </script><script src="/js/pjax_main.js" integrity="" crossorigin="anonymous" data-pjax></script><script
+    src="https://npm.webcache.cn/mouse-firework@0.1.1/dist/index.umd.js"
+    integrity="sha384-8LyaidD9GPxQQgLJO/WRw/O2h3BoNq/ApI/ecpvM6RsrCz2qP2ppBXUKihP4V/2d" crossorigin="anonymous"></script><script>
+  if (window.firework) {
+    const options = JSON.parse("{\"excludeelements\":[\"a\",\"button\"],\"particles\":[{\"colors\":[\"var(--red-1)\",\"var(--red-2)\",\"var(--red-3)\",\"var(--red-4)\"],\"duration\":[1200,1800],\"easing\":\"easeOutExpo\",\"move\":[\"emit\"],\"number\":20,\"shape\":\"circle\",\"shapeOptions\":{\"alpha\":[0.3,0.5],\"radius\":[16,32]}},{\"colors\":[\"var(--red-0)\"],\"duration\":[1200,1800],\"easing\":\"easeOutExpo\",\"move\":[\"diffuse\"],\"number\":1,\"shape\":\"circle\",\"shapeOptions\":{\"alpha\":[0.2,0.5],\"lineWidth\":6,\"radius\":20}}]}");
+    options.excludeElements = options.excludeelements;
+    delete options.excludeelements;
+    window.firework(options);
+  }
+</script>
+
+<div id="lazy-script">
+  <div><script data-pjax>
+        window.REIMU_POST = {
+          author: "zengbiaojie \u0026 zhoujuan",
+          title: "【文章笔记】【模型融合】AdaMerging",
+          url: "https:\/\/zz.hanhan.live\/post\/adamergin\/",
+          description: "AdaMerging: Adaptive Model Merging for Multi-Task Learning\n1.文章总结及思考\r1.1 背景（动机和挑战）\r当前的merge是让多个微调好的模型merge成一个模型后去执行MTL，但这存在几个问题：\n",
+          cover: "https:\/\/zz.hanhan.live\/images\/banner.png",
+        };
+      </script><script src="/js/insert_highlight.js" integrity="" crossorigin="anonymous" data-pjax></script><script type="module" data-pjax>const PhotoSwipeLightbox = (await safeImport("https:\/\/npm.webcache.cn\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js", "sha384-DiL6M\/gG\u002bwmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF\/N6lrZi\/")).default;const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',pswpModule: () => safeImport("https:\/\/npm.webcache.cn\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8\u002boTJ7m3DfYEWX1fu1scuS4\u002bs")}).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',pswpModule: () => safeImport("https:\/\/npm.webcache.cn\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8\u002boTJ7m3DfYEWX1fu1scuS4\u002bs")}).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script><script
+    src="https://npm.webcache.cn/katex@0.16.22/dist/katex.min.js"
+    data-pjaxintegrity="sha384-cMkvdD8LoxVzGF/RPUKAcvmm49FQ0oxwDF3BGKtDXcEc&#43;T1b2N&#43;teh/OJfpU0jr6" crossorigin="anonymous"></script><script
+    src="https://npm.webcache.cn/katex@0.16.22/dist/contrib/auto-render.min.js"
+    data-pjaxintegrity="sha384-hCXGrW6PitJEwbkoStFjeJxv&#43;fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous"></script><script data-pjax>
+          var renderMath = () => {
+            if (!window.renderMathInElement) return;
+            window.renderMathInElement(_$("article"), {
+              delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "\\[", right: "\\]", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+              ],
+            });
+          };
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", renderMath, { once: true });
+          } else {
+            renderMath();
+          }
+        </script></div>
+</div><script
+    src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js"
+    asyncintegrity="sha384-0M75wtSkhjIInv4coYlaJU83&#43;OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id&#43;S" crossorigin="anonymous"></script><script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+  </script><script>
+  const reimuCopyright = String.raw`
+   ______     ______     __     __    __     __  __    
+  /\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+  \ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+   \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+    \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                    
+  `;
+  console.log(String.raw`%c ${reimuCopyright}`, "color: #ff5252;");
+  console.log(
+    "%c Theme.Reimu" + " %c https://github.com/D-Sketon/hugo-theme-reimu ",
+    "color: white; background: #ff5252; padding:5px 0;",
+    "padding:4px;border:1px solid #ff5252;",
+  );
+</script></body>
+</html>

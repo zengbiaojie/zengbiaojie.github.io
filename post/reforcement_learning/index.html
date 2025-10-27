@@ -1,0 +1,689 @@
+<!doctype html>
+<html
+  lang="zh-cn" 
+  data-theme-mode="auto"
+  >
+  <head><meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, shrink-to-fit=no"
+/><title>
+  【书籍阅读】【动手学强化学习】强化学习基础篇 - 多臂老虎机 | zengbiaojie & zhoujuan
+</title>
+<meta
+  name="description"
+  content="我们是人工智能领域大科学家！"
+/><script>
+  window.siteConfig = JSON.parse("{\"anchor_icon\":null,\"base\":\"https://zz.hanhan.live/\",\"clipboard\":{\"copyright\":{\"count\":50,\"enable\":false,\"license_type\":\"by-nc-sa\"},\"fail\":{\"en\":\"Copy failed (ﾟ⊿ﾟ)ﾂ\",\"ja\":\"コピー失敗 (ﾟ⊿ﾟ)ﾂ\",\"pt-br\":\"Falha ao copiar (ﾟ⊿ﾟ)ﾂ\",\"zh-cn\":\"复制失败 (ﾟ⊿ﾟ)ﾂ\",\"zh-tw\":\"複製失敗 (ﾟ⊿ﾟ)ﾂ\"},\"success\":{\"en\":\"Copy successfully (*^▽^*)\",\"ja\":\"コピー成功 (*^▽^*)\",\"pt-br\":\"Copiado com sucesso (*^▽^*)\",\"zh-cn\":\"复制成功 (*^▽^*)\",\"zh-tw\":\"複製成功 (*^▽^*)\"}},\"code_block\":{\"expand\":20},\"icon_font\":\"4552607_0khxww3tj3q9\",\"outdate\":{\"daysago\":180,\"enable\":false,\"message\":{\"en\":\"This article was last updated on {time}. Please note that the content may no longer be applicable.\",\"ja\":\"この記事は最終更新日：{time}。記載内容が現在有効でない可能性がありますのでご注意ください。\",\"pt-br\":\"Este artigo foi atualizado pela última vez em {time}. Observe que o conteúdo pode não ser mais aplicável.\",\"zh-cn\":\"本文最后更新于 {time}，请注意文中内容可能已不适用。\",\"zh-tw\":\"本文最後更新於 {time}，請注意文中內容可能已不適用。\"}}}");
+  
+</script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="preload"
+  as="style"
+  href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7cNoto%20Serif%20SC:400,400italic,700,700italic%7c&amp;display=swap"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7cNoto%20Serif%20SC:400,400italic,700,700italic%7c&amp;display=swap"
+  media="print"
+  onload="this.media='all'"
+/>
+<link
+    rel="preload"
+    href="//at.alicdn.com/t/c/font_4552607_0khxww3tj3q9.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin="anonymous"
+  /><link rel="stylesheet" href="/css/loader.min.ac746e154f756f8220326eeb52a719f142ab038be5a8ddf30ea5ef15ef2356ea.css" />
+<meta property="og:type" content="website" />
+  <meta property="og:title" content="【书籍阅读】【动手学强化学习】强化学习基础篇 - 多臂老虎机 | zengbiaojie & zhoujuan" />
+  <meta
+    property="og:description"
+    content="我们是人工智能领域大科学家！"
+  />
+  <meta property="og:url" content="https://zz.hanhan.live/post/reforcement_learning/" />
+  <meta
+    property="og:site_name"
+    content="小 z 的金屋"
+  />
+  <meta
+    property="og:image"
+    content="/"
+  />
+  <meta property="article:author" content="zengbiaojie & zhoujuan" />
+  <meta property="article:published_time" content="2025-10-09T14:57:52&#43;08:00" />
+  <meta property="article:modified_time" content="2025-10-09T14:57:52&#43;08:00" /><meta property="article:tag" content="强化学习张伟楠动手学强化学习多臂老虎机UCB上置信界汤普森采样" /><meta name="twitter:card" content="summary" />
+  <meta name="twitter:image" content="/" />
+<link rel="shortcut icon" href="/favicon.ico"><link rel="stylesheet" href="/css/main.min.6b3f96d0d04f98678149e3cf7e64b2c567b840637aada3b4698b20028152a942.css" />
+<link
+    rel="preload"
+    as="style"
+    href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css"
+    integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei&#43;Zx/1oA/0l8ysE" crossorigin="anonymous"onload="this.onload=null;this.rel='stylesheet'"
+  /><link
+    rel="preload"
+    as="style"
+    href="https://npm.webcache.cn/katex@0.16.22/dist/katex.min.css"
+    integrity="sha384-5TcZemv2l/9On385z///&#43;d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP" crossorigin="anonymous"onload="this.onload=null;this.rel='stylesheet'"
+  /><script
+    src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js"
+    integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script><link
+    rel="stylesheet"
+    href="https://npm.webcache.cn/@reimujs/aos@0.1.2/dist/aos.css"
+    integrity="sha384-GMRP93c6Hkz9JVKGAuRR3nTS7M07RwPgTFenXiosjq2VbVgvdDNcz1g6Mkj8AONa" crossorigin="anonymous"/></head>
+  <body><div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi rotate"><svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+          M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg></div><div class="loading-word">新建了别催了...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script><div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+<div id="lang-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+本文章没有找到对应的语言版本
+</div>
+<div id="heatmap-tooltip"></div><div id="container">
+      <div id="wrap"><div id="header-nav">
+  <nav id="main-nav"><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/">首页</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/archives">归档</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/about">经历</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/plan">计划</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/friend">友链</a>
+      </span><a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav"></nav></div>
+<header id="header"><picture></picture><img crossorigin="anonymous" fetchpriority="high" src="/images/banner.png" alt="【书籍阅读】【动手学强化学习】强化学习基础篇 - 多臂老虎机"><div id="header-outer">
+    <div id="header-title"><a href="/" id="logo">
+            <h1 data-aos="slide-up">【书籍阅读】【动手学强化学习】强化学习基础篇 - 多臂老虎机</h1>
+          </a><h2 id="subtitle-wrap" data-aos="slide-down"></h2></div>
+  </div>
+</header><div id="content"
+          
+          class="sidebar-right"  ><aside id="sidebar"><div class="sidebar-wrapper wrap-sticky">
+    <div
+      class="sidebar-wrap"
+      data-aos="fade-up"
+    ><div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#多臂老虎机mab">多臂老虎机（MAB）</a>
+      <ul>
+        <li><a href="#问题定义">问题定义</a></li>
+        <li><a href="#形式化描述">形式化描述</a></li>
+        <li><a href="#累积懊悔">累积懊悔</a></li>
+        <li><a href="#估计期望奖励">估计期望奖励</a></li>
+        <li><a href="#探索与利用">探索与利用</a></li>
+        <li><a href="#贪心算法">贪心算法</a></li>
+        <li><a href="#上置信界算法">上置信界算法</a></li>
+        <li><a href="#汤普森采样算法">汤普森采样算法</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div></div>
+          <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img
+    data-src="/avatar/avatar.jpg"
+    data-sizes="auto"
+    alt="zengbiaojie &amp; zhoujuan"
+    class="lazyload"
+  />
+  <div class="sidebar-author-name">zengbiaojie &amp; zhoujuan</div>
+  <div class="sidebar-description">我们是人工智能领域大科学家！</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div><div class="sidebar-state-number">8</div>
+  </div>
+  <a class="sidebar-state-category" href="/categories/" aria-label="sidebar-state-category-link">
+    <div>分类</div>
+    <div class="sidebar-state-number">
+      3
+    </div>
+  </a>
+  <a class="sidebar-state-tag" href="/tags/" aria-label="sidebar-state-tag-link">
+    <div>标签</div>
+    <div class="sidebar-state-number">12</div>
+  </a>
+</div>
+<div class="sidebar-social"></div>
+<div class="sidebar-menu"><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/"
+        aria-label="首页"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">首页</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/archives"
+        aria-label="归档"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">归档</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/about"
+        aria-label="经历"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">经历</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/plan"
+        aria-label="计划"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">计划</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/friend"
+        aria-label="友链"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">友链</div>
+    </div></div>
+</div><div class="sidebar-btn-wrapper" style="position:static">
+            <div class="sidebar-toc-btn current"></div>
+            <div class="sidebar-common-btn"></div>
+          </div></div>
+  </div>
+
+  <div class="sidebar-widget"></div></aside>
+<section id="main"><article
+  class="h-entry article"
+  itemprop="blogPost"
+  itemscope
+  itemtype="https://schema.org/BlogPosting"
+>
+  <div
+    class="article-inner"
+    data-aos="fade-up"
+  >
+    <div class="article-meta"><div class="article-date">
+  <span
+    class="article-date-link"
+    data-aos="zoom-in"
+  >
+    <time datetime="2025-10-09 14:57:52 &#43;0800 CST" itemprop="datePublished"
+      >2025-10-09</time
+    >
+    <time style="display: none;" id="post-update-time"
+      >2025-10-09</time
+    >
+  </span>
+</div>
+<div class="article-category"><a
+      class="article-category-link"
+      href="/categories/%e4%b9%a6%e7%b1%8d%e9%98%85%e8%af%bb"
+      data-aos="zoom-in"
+      >书籍阅读</a
+    ></div>
+</div>
+    <div class="hr-line"></div><div class="e-content article-entry" itemprop="articleBody"><h2 id="多臂老虎机mab">
+<a class="header-anchor" href="#%e5%a4%9a%e8%87%82%e8%80%81%e8%99%8e%e6%9c%bamab"></a>
+多臂老虎机（MAB）
+</h2><p>多臂老虎机可以看作是一个简易版的强化学习问题，其中不存在状态，只有动作与奖励。</p>
+<h3 id="问题定义">
+<a class="header-anchor" href="#%e9%97%ae%e9%a2%98%e5%ae%9a%e4%b9%89"></a>
+问题定义
+</h3><p>在一个 $ K $ 根拉杆的多臂老虎机中，每个拉杆都对应于一个奖励的概率分布 $ \R $ ，拉下拉杆就能从该拉杆的对应的奖励概率分布中获得一个奖励 $ r $ 。在每个拉杆的奖励概率分布未知的情况下，从头开始尝试，目标是在 $ T $ 次拉杆后获得尽可能高的累积奖励。</p>
+<p>由于奖励的概率分布是未知的，因此需要在“探索拉杆的获奖概率”以及“根据经验选择获奖最多的拉杆”之间探索，即<strong>探索与利用</strong>问题。</p>
+<h3 id="形式化描述">
+<a class="header-anchor" href="#%e5%bd%a2%e5%bc%8f%e5%8c%96%e6%8f%8f%e8%bf%b0"></a>
+形式化描述
+</h3><p>多臂老虎机问题可以表示为一个元组 $ \langle \mathcal{A},\mathcal{R} \rangle $ ，其中：</p>
+<ul>
+<li>$ \mathcal{A} $ 为动作集合，其中一个动作表示拉动一个拉杆。若多臂老虎机有 $ K $ 根拉杆，那么动作空间的集合为 $ \{ a_1,...,a_k \} $ ，我们用 $ a_t \in \mathcal{A} $ 表示任意一个动作</li>
+<li>$ \mathcal{R} $ 为奖励概率分布，拉动每一根拉杆的动作 $ a $ 都对应一个奖励概率分布 $ \mathcal{R(r|a)} $ ，不同拉杆的奖励分布通常不同</li>
+</ul>
+<p>假设每个时间只能拉动一个拉杆，多臂老虎机的目标为最大化一段时间步 $ T $ 内累积的奖励： $ max \sum_{t=1}^T r_t, r_t ~ \mathcal{R(\cdot|a_t)} $</p>
+<h3 id="累积懊悔">
+<a class="header-anchor" href="#%e7%b4%af%e7%a7%af%e6%87%8a%e6%82%94"></a>
+累积懊悔
+</h3><p>对于每个动作，定义其期望奖励为 $ Q(a) =  \mathbb{E}_{r \sim R(\cdot|a)}[r] $ 。因为至少存在一个拉杆其期望奖励大于其他任意一根拉杆，我们将其表示为 $ Q^* = max_{a \in \mathcal{A}}~Q(a) $ 。为了更加直观的观察拉动一根拉杆与最优奖励的差距，引入**懊悔(regret)**概念，即 $ R(a) = Q^* - Q(a) $ 。<strong>累积懊悔</strong>即操作T次后的懊悔总量，即 $ \sigma_R=\sum_{t=1}^TR(a_t) $ ，因此MAB问题的目标为最大化奖励，同时等价于最小化累积懊悔。</p>
+<h3 id="估计期望奖励">
+<a class="header-anchor" href="#%e4%bc%b0%e8%ae%a1%e6%9c%9f%e6%9c%9b%e5%a5%96%e5%8a%b1"></a>
+估计期望奖励
+</h3><p>为了知道拉动拉杆所能得到的奖励，我们需要估计拉杆的期望奖励，由于拉动一次的奖励存在随机性，因此需要多次拉动计算期望，其算法流程如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">A</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">N</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 初始化 计数器</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Q</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 初始化 期望奖励</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">T</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">a_t</span> <span class="o">=</span> <span class="n">select</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r_t</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="n">a_t</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">N</span><span class="p">(</span><span class="n">a_t</span><span class="p">)</span> <span class="o">=</span> <span class="n">N</span><span class="p">(</span><span class="n">a_t</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Q</span><span class="p">(</span><span class="n">a_t</span><span class="p">)</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="n">a_t</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">r_t</span> <span class="o">-</span> <span class="n">Q</span><span class="p">(</span><span class="n">a_t</span><span class="p">)]</span> <span class="o">/</span> <span class="n">N</span><span class="p">(</span><span class="n">a_t</span><span class="p">)</span>
+</span></span></code></pre></div><p>上述内容推导如下：
+$  $
+Q_k = \frac{1}{k} \sum_{i=1}^k r_i \
+=\frac{1}{k}(r_k + \sum_{i=1}^{k-1} ri) \
+=\frac{1}{k}(r_k + (k-1)Q_{k-1}) \
+=\frac{1}{k}(r_k + kQ_{k-1} - Q_{k-1}) \
+=Q_{k-1} + \frac{(r_k - Q_{k-1})}{k}
+$  $</p>
+<p>采用上述方式更新每次的时间复杂度和空间复杂度都为 O(1)</p>
+<h3 id="探索与利用">
+<a class="header-anchor" href="#%e6%8e%a2%e7%b4%a2%e4%b8%8e%e5%88%a9%e7%94%a8"></a>
+探索与利用
+</h3><p>多臂老虎机问题即如何平衡探索与利用的次数达到最大的总奖励或最小的懊悔值。</p>
+<h3 id="贪心算法">
+<a class="header-anchor" href="#%e8%b4%aa%e5%bf%83%e7%ae%97%e6%b3%95"></a>
+贪心算法
+</h3><h4 id="-贪心算法">
+<a class="header-anchor" href="#-%e8%b4%aa%e5%bf%83%e7%ae%97%e6%b3%95"></a>
+$ \epsilon $ -贪心算法
+</h4><p>最简单的方式是直接选择贪心算法，即一直选择获得最大奖励的拉杆进行拉动，但多臂老虎机的奖励分布未知，因此对其进行修改，形式如下：
+$  $
+a_t = \begin{cases}
+argmax_{a\in\mathcal{A}} ~ \hat Q(a) ~~采样概率：1 - \epsilon \
+random_sample(\mathcal{A}) ~~采样概率：\epsilon
+\end{cases}
+$  $</p>
+<p><img src="/post/reforcement_learning/1760083810457.png" alt="1760083810457"></p>
+<p>可以看到无论 $ \epsilon $ 取值为多少，懊悔之都呈现近乎线性的增长曲线，这是由于只要做出了随机拉杆选择的选项那么此时就一定会产生期望固定的懊悔值</p>
+<h4 id="时间衰减的---贪心算法">
+<a class="header-anchor" href="#%e6%97%b6%e9%97%b4%e8%a1%b0%e5%87%8f%e7%9a%84---%e8%b4%aa%e5%bf%83%e7%ae%97%e6%b3%95"></a>
+时间衰减的 $ \epsilon $ -贪心算法
+</h4><p>我们对 $ \epsilon $ 进行衰减处理，采用反比例衰减，即 $ \epsilon_t=\frac{1}{t} $ ，开始时探索概率更高，后续逐渐衰减为利用概率更高。可以看到采用衰减的 $ \epsilon $ 得到的懊悔增长先快后慢</p>
+<p><img src="/post/reforcement_learning/1760100899030.png" alt="1760100899030"></p>
+<h3 id="上置信界算法">
+<a class="header-anchor" href="#%e4%b8%8a%e7%bd%ae%e4%bf%a1%e7%95%8c%e7%ae%97%e6%b3%95"></a>
+上置信界算法
+</h3><p>假设一种情况，一个两臂老虎机，其中第一个杠杆只拉动了一次，奖励为0，另一个杠杆拉动了很多次，基本摸清了他的奖励分布，这时会有两种选择？有可能是进一步尝试第一个杠杆，去进一步确定这个杠杆的奖励分布，也有可能会直接采用第二根杠杆得到大致确定的奖励。这是由于<strong>不确定性</strong>导致，对于第一个杠杆不确定性很高，而第二个杠杆很低。
+这是由于第一个杠杆具有很大的探索价值，有可能经过探索发现其期望奖励非常大。因此引入不确定性度量 $ U(\alpha) $ ，它会随着使用次数增加和减小，然后就可以基于不确定性的策略来综合考虑现有的期望奖励估值和不确定性，其核心问题就是如何估计不确定性。</p>
+<p><strong>上置信界(upper confidence bound, UCB)</strong> 算法是一种经典的基于有不确定性的策略算法。</p>
+<p>假设一个按钮的真实奖励概率为 $ p $ ，我们拉动了 $ n $ 次，其中 $ n_r $ 次获得了奖励，那么我们的预估奖励概率为 $ \widetilde{p} $ 。如果能根据经验找到一个 $ \delta $ ，使得 $ p \le \widetilde{p} + \delta $ 恒成立，那么就可以认为 $ \widetilde{p} + \delta $ 是 $ p $ 的上界。因此在 $ \widetilde{p} $ 确定的情况下， $ \delta $ 决定了 $ p $ 的范围，即 $ \delta $ 可以一定程度的反映按钮此时的不确定性。</p>
+<h4 id="如何找到">
+<a class="header-anchor" href="#%e5%a6%82%e4%bd%95%e6%89%be%e5%88%b0"></a>
+如何找到 $ \delta $
+</h4><p>此处引入<strong>霍夫丁不等式(Hoeffding&rsquo;s inequality)</strong></p>
+<blockquote>
+<p>【霍夫丁不等式】设 $ X_1, ..., X_n $ 为 $ n $ 个取值为 $ [0,1] $ 之间的独立同分布的变量，用 $ \widetilde{p} = \frac{1}{n} \sum_{j=1}^n X_i $ 表示其样本均值，用 $ p $ 表示实际均值，那么有 $ P\{p-\widetilde{p} \le \delta \} \ge 1 - e^{-2n \delta^2} $</p></blockquote>
+<p>经过变换可以得到 $ P\{p \le \widetilde{p} + \delta \} \ge 1 - e^{-2n \delta^2} $</p>
+<p>此时经过拉动杠杆我们得到了样本均值 $ \widetilde{p} $ ，想要让 $ p \le \widetilde{p} + \delta $ 恒成立这是不现实的，因此在容忍一些小差错的前提下，使得其尽可能接近100%，即让 $ 1 - e^{-2n\delta^2} $ 尽可能大，这样 $ P\{p \le \widetilde{p} + \delta \} $ 就会尽可能的大</p>
+<p>因此需要找到一个表示方法，让 $ 1 - e^{-2n\delta^2} $ 尽可能接近于1。思考对于总共拉动 $ N $ 次拉杆（所有拉杆的次数之和）可以得到的最大的预估奖励是多少？由于要找到不等于1但无限接近于1的方案，因此可以得到的最大预估奖励为 $ \frac{N-1}{N} $</p>
+<p>此时令 $ 1-e^{-2n\delta^2} = \frac{N-1}{N} $ ，通过变换可以得到 $ \delta = \sqrt{\frac{\ln{N}}{2n}} $ ，即在 $ \delta $ 满足左侧等式的情况下， $ p \le \widetilde{p} + \delta $ 几乎恒成立</p>
+<h4 id="基于--如何进行按钮选择">
+<a class="header-anchor" href="#%e5%9f%ba%e4%ba%8e--%e5%a6%82%e4%bd%95%e8%bf%9b%e8%a1%8c%e6%8c%89%e9%92%ae%e9%80%89%e6%8b%a9"></a>
+基于 $ \delta $ 如何进行按钮选择
+</h4><p>通过上述内容得到 $ \delta = \sqrt{\frac{\ln{N}}{2n}} $ ，但其中 $ \frac{N-1}{N} $ 是拍脑袋想的，还需要进一步分析是否合适</p>
+<ul>
+<li>当 $ n $ 不变，$N$增大，即我们选择按其他按钮，而这个按钮不变，此时 $\delta$ 即不确定性（相对于其他按钮）增大</li>
+<li>当 $ N $ 不变，$n$增加，即按当前按钮的比例增大，此时该按钮不确定性（相对于其他按钮）降低</li>
+</ul>
+<p>由于上述分析，可以认为$\delta$合理</p>
+<p>此时对于每个按钮来说其能得到的预估奖励为 $ \widetilde{p} + \delta = \frac{n_r}{n} + \sqrt{\frac{\ln{N}}{2n}} $，每次都去选择预估奖励最大的拉杆进行拉动</p>
+<p>实际使用时为了防止出现分母为 $ 0 $ 的情况，对分母都进行 $ +1 $操作 ，此外为了调节利用与探索，使用时会在不确定性前加入超参数 $ c $ 以调节不确定性的影响，最终使用的奖励估计如下：</p>
+$$
+UCB = \frac{n_r}{n + 1} + c * \sqrt{\frac{\ln{N}}{2n + 1}}
+$$<p>可以看出 $ UCB $ 算法得到的结果也是通过少量探索次数后，懊悔值上升就非常缓慢了</p>
+<p><img src="/post/reforcement_learning/1760583152845.png" alt="1760583152845"></p>
+<h3 id="汤普森采样算法">
+<a class="header-anchor" href="#%e6%b1%a4%e6%99%ae%e6%a3%ae%e9%87%87%e6%a0%b7%e7%ae%97%e6%b3%95"></a>
+汤普森采样算法
+</h3></div>
+    <footer class="article-footer"><blockquote class="article-copyright"><p><strong><span class="icon-user icon"></span>本文作者：</strong>zengbiaojie &amp; zhoujuan @ 小 z 的金屋</p><p>
+      <strong><span class="icon-link icon"></span>本文链接：</strong><a href="https://zz.hanhan.live/post/reforcement_learning/">https://zz.hanhan.live/post/reforcement_learning/</a>
+    </p><p><strong><span class="icon-pencil icon"></span>本文标题：</strong>【书籍阅读】【动手学强化学习】强化学习基础篇 - 多臂老虎机</p><p><strong><span class="icon-calendar icon"></span>本文发布时间：</strong>2025-10-09 14:57:52</p><p>
+      
+      <strong><span class="icon-copyright icon"></span>本文版权：</strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！
+    </p>
+    <span class="icon-creative-commons article-copyright-bg"></span></blockquote>
+<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in">
+      <a
+        class="article-tag-list-link"
+        href="/tags/%e5%bc%ba%e5%8c%96%e5%ad%a6%e4%b9%a0"
+        rel="tag"
+        >强化学习</a
+      >
+    </li><li class="article-tag-list-item" data-aos="zoom-in">
+      <a
+        class="article-tag-list-link"
+        href="/tags/%e5%bc%a0%e4%bc%9f%e6%a5%a0"
+        rel="tag"
+        >张伟楠</a
+      >
+    </li><li class="article-tag-list-item" data-aos="zoom-in">
+      <a
+        class="article-tag-list-link"
+        href="/tags/%e5%8a%a8%e6%89%8b%e5%ad%a6%e5%bc%ba%e5%8c%96%e5%ad%a6%e4%b9%a0"
+        rel="tag"
+        >动手学强化学习</a
+      >
+    </li><li class="article-tag-list-item" data-aos="zoom-in">
+      <a
+        class="article-tag-list-link"
+        href="/tags/%e5%a4%9a%e8%87%82%e8%80%81%e8%99%8e%e6%9c%ba"
+        rel="tag"
+        >多臂老虎机</a
+      >
+    </li><li class="article-tag-list-item" data-aos="zoom-in">
+      <a
+        class="article-tag-list-link"
+        href="/tags/ucb"
+        rel="tag"
+        >UCB</a
+      >
+    </li><li class="article-tag-list-item" data-aos="zoom-in">
+      <a
+        class="article-tag-list-link"
+        href="/tags/%e4%b8%8a%e7%bd%ae%e4%bf%a1%e7%95%8c"
+        rel="tag"
+        >上置信界</a
+      >
+    </li><li class="article-tag-list-item" data-aos="zoom-in">
+      <a
+        class="article-tag-list-link"
+        href="/tags/%e6%b1%a4%e6%99%ae%e6%a3%ae%e9%87%87%e6%a0%b7"
+        rel="tag"
+        >汤普森采样</a
+      >
+    </li></ul>
+</footer>
+  </div><nav
+    id="article-nav"
+    data-aos="fade-up"
+  ><div class="article-nav-link-wrap article-nav-link-left"><img
+              data-src="/images/cha5.png"
+              data-sizes="auto"
+              alt="【书籍阅读】【模式识别与机器学习】贝叶斯学习基础"
+              class="lazyload"
+            /><a href="/post/pattern_recognize/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">【书籍阅读】【模式识别与机器学习】贝叶斯学习基础</h3>
+      </div></nav></article></section>
+        </div><footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info"><div>
+      <span class="icon-copyright"></span>2020-2025<span class="footer-info-sep rotate"></span>
+      zengbiaojie &amp; zhoujuan
+    </div><div>
+        基于&nbsp;<a
+          href="https://gohugo.io/"
+          target="_blank"
+          >Hugo</a
+        >&nbsp; Theme.<a
+          href="https://github.com/D-Sketon/hugo-theme-reimu"
+          target="_blank"
+          >Reimu</a
+        >
+      </div><div>
+        <span class="icon-brush"
+          >&nbsp;24.9k</span
+        >
+        &nbsp;|&nbsp;
+        <span class="icon-coffee">&nbsp;00:52</span>
+      </div><div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv"
+          >总访问量&nbsp;<span
+            id="busuanzi_value_site_pv"
+          ></span
+        ></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv"
+          >总访客量&nbsp;<span
+            id="busuanzi_value_site_uv"
+          ></span
+        ></span>
+      </div></div>
+</footer>
+<div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div><div id="mask" class="hide"></div>
+      </div><nav id="mobile-nav">
+  <div class="sidebar-wrap"><div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#多臂老虎机mab">多臂老虎机（MAB）</a>
+      <ul>
+        <li><a href="#问题定义">问题定义</a></li>
+        <li><a href="#形式化描述">形式化描述</a></li>
+        <li><a href="#累积懊悔">累积懊悔</a></li>
+        <li><a href="#估计期望奖励">估计期望奖励</a></li>
+        <li><a href="#探索与利用">探索与利用</a></li>
+        <li><a href="#贪心算法">贪心算法</a></li>
+        <li><a href="#上置信界算法">上置信界算法</a></li>
+        <li><a href="#汤普森采样算法">汤普森采样算法</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div></div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img
+    data-src="/avatar/avatar.jpg"
+    data-sizes="auto"
+    alt="zengbiaojie &amp; zhoujuan"
+    class="lazyload"
+  />
+  <div class="sidebar-author-name">zengbiaojie &amp; zhoujuan</div>
+  <div class="sidebar-description">我们是人工智能领域大科学家！</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div><div class="sidebar-state-number">8</div>
+  </div>
+  <a class="sidebar-state-category" href="/categories/" aria-label="sidebar-state-category-link">
+    <div>分类</div>
+    <div class="sidebar-state-number">
+      3
+    </div>
+  </a>
+  <a class="sidebar-state-tag" href="/tags/" aria-label="sidebar-state-tag-link">
+    <div>标签</div>
+    <div class="sidebar-state-number">12</div>
+  </a>
+</div>
+<div class="sidebar-social"></div>
+<div class="sidebar-menu"><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/"
+        aria-label="首页"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">首页</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/archives"
+        aria-label="归档"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">归档</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/about"
+        aria-label="经历"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">经历</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/plan"
+        aria-label="计划"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">计划</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/friend"
+        aria-label="友链"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">友链</div>
+    </div></div>
+</div></div><div class="sidebar-btn-wrapper">
+        <div class="sidebar-toc-btn current"></div>
+        <div class="sidebar-common-btn"></div>
+      </div></nav>
+</div><script
+    src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js"
+    integrity="sha384-3gT/vsepWkfz/ff7PpWNUeMzeWoH3cDhm/A8jM7ouoAK0/fP/9bcHHR5kHq2nf&#43;e" crossorigin="anonymous"></script><script
+    src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js"
+    integrity="sha384-J08i8An/QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script><script
+    src="https://npm.webcache.cn/material-theme@1.0.0/dist/material-theme.umd.js"
+    integrity="sha384-vLev0II0HKFaxkcm&#43;/7kX5IGwVFBASkGchU311wmU/veIj2bB0UcBkQbW6yw2asK" crossorigin="anonymous"></script><script src="/js/main.js" integrity="" crossorigin="anonymous" ></script><script src="/js/aos.js" integrity="" crossorigin="anonymous" ></script><script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", aosInit);
+    } else {
+      aosInit();
+    }
+  </script><script src="/js/pjax_main.js" integrity="" crossorigin="anonymous" data-pjax></script><script
+    src="https://npm.webcache.cn/mouse-firework@0.1.1/dist/index.umd.js"
+    integrity="sha384-8LyaidD9GPxQQgLJO/WRw/O2h3BoNq/ApI/ecpvM6RsrCz2qP2ppBXUKihP4V/2d" crossorigin="anonymous"></script><script>
+  if (window.firework) {
+    const options = JSON.parse("{\"excludeelements\":[\"a\",\"button\"],\"particles\":[{\"colors\":[\"var(--red-1)\",\"var(--red-2)\",\"var(--red-3)\",\"var(--red-4)\"],\"duration\":[1200,1800],\"easing\":\"easeOutExpo\",\"move\":[\"emit\"],\"number\":20,\"shape\":\"circle\",\"shapeOptions\":{\"alpha\":[0.3,0.5],\"radius\":[16,32]}},{\"colors\":[\"var(--red-0)\"],\"duration\":[1200,1800],\"easing\":\"easeOutExpo\",\"move\":[\"diffuse\"],\"number\":1,\"shape\":\"circle\",\"shapeOptions\":{\"alpha\":[0.2,0.5],\"lineWidth\":6,\"radius\":20}}]}");
+    options.excludeElements = options.excludeelements;
+    delete options.excludeelements;
+    window.firework(options);
+  }
+</script>
+
+<div id="lazy-script">
+  <div><script data-pjax>
+        window.REIMU_POST = {
+          author: "zengbiaojie \u0026 zhoujuan",
+          title: "【书籍阅读】【动手学强化学习】强化学习基础篇 - 多臂老虎机",
+          url: "https:\/\/zz.hanhan.live\/post\/reforcement_learning\/",
+          description: "\r多臂老虎机（MAB）\r多臂老虎机可以看作是一个简易版的强化学习问题，其中不存在状态，只有动作与奖励。\n问题定义\r在一个 $ K $ 根拉杆的多臂老虎机中，每个拉杆都对应于一个奖励的概率分布 $ \\R $ ，拉下拉杆就能从该拉杆的对应的奖励概率分布中获得一个奖励 $ r $ 。在每个拉杆的奖励概率分布未知的情况下，从头开始尝试，目标是在 $ T $ 次拉杆后获得尽可能高的累积奖励。\n",
+          cover: "https:\/\/zz.hanhan.live\/images\/banner.png",
+        };
+      </script><script src="/js/insert_highlight.js" integrity="" crossorigin="anonymous" data-pjax></script><script type="module" data-pjax>const PhotoSwipeLightbox = (await safeImport("https:\/\/npm.webcache.cn\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js", "sha384-DiL6M\/gG\u002bwmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF\/N6lrZi\/")).default;const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',pswpModule: () => safeImport("https:\/\/npm.webcache.cn\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8\u002boTJ7m3DfYEWX1fu1scuS4\u002bs")}).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',pswpModule: () => safeImport("https:\/\/npm.webcache.cn\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8\u002boTJ7m3DfYEWX1fu1scuS4\u002bs")}).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script><script
+    src="https://npm.webcache.cn/katex@0.16.22/dist/katex.min.js"
+    data-pjaxintegrity="sha384-cMkvdD8LoxVzGF/RPUKAcvmm49FQ0oxwDF3BGKtDXcEc&#43;T1b2N&#43;teh/OJfpU0jr6" crossorigin="anonymous"></script><script
+    src="https://npm.webcache.cn/katex@0.16.22/dist/contrib/auto-render.min.js"
+    data-pjaxintegrity="sha384-hCXGrW6PitJEwbkoStFjeJxv&#43;fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous"></script><script data-pjax>
+          var renderMath = () => {
+            if (!window.renderMathInElement) return;
+            window.renderMathInElement(_$("article"), {
+              delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "\\[", right: "\\]", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+              ],
+            });
+          };
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", renderMath, { once: true });
+          } else {
+            renderMath();
+          }
+        </script></div>
+</div><script
+    src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js"
+    asyncintegrity="sha384-0M75wtSkhjIInv4coYlaJU83&#43;OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id&#43;S" crossorigin="anonymous"></script><script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+  </script><script>
+  const reimuCopyright = String.raw`
+   ______     ______     __     __    __     __  __    
+  /\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+  \ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+   \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+    \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                    
+  `;
+  console.log(String.raw`%c ${reimuCopyright}`, "color: #ff5252;");
+  console.log(
+    "%c Theme.Reimu" + " %c https://github.com/D-Sketon/hugo-theme-reimu ",
+    "color: white; background: #ff5252; padding:5px 0;",
+    "padding:4px;border:1px solid #ff5252;",
+  );
+</script></body>
+</html>

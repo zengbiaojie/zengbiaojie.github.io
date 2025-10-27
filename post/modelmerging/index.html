@@ -1,0 +1,692 @@
+<!doctype html>
+<html
+  lang="zh-cn" 
+  data-theme-mode="auto"
+  >
+  <head><meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, shrink-to-fit=no"
+/><title>
+  【文章笔记】【模型融合】Model Merging in Pre-training of Large Language Models | zengbiaojie & zhoujuan
+</title>
+<meta
+  name="description"
+  content="我们是人工智能领域大科学家！"
+/><script>
+  window.siteConfig = JSON.parse("{\"anchor_icon\":null,\"base\":\"https://zz.hanhan.live/\",\"clipboard\":{\"copyright\":{\"count\":50,\"enable\":false,\"license_type\":\"by-nc-sa\"},\"fail\":{\"en\":\"Copy failed (ﾟ⊿ﾟ)ﾂ\",\"ja\":\"コピー失敗 (ﾟ⊿ﾟ)ﾂ\",\"pt-br\":\"Falha ao copiar (ﾟ⊿ﾟ)ﾂ\",\"zh-cn\":\"复制失败 (ﾟ⊿ﾟ)ﾂ\",\"zh-tw\":\"複製失敗 (ﾟ⊿ﾟ)ﾂ\"},\"success\":{\"en\":\"Copy successfully (*^▽^*)\",\"ja\":\"コピー成功 (*^▽^*)\",\"pt-br\":\"Copiado com sucesso (*^▽^*)\",\"zh-cn\":\"复制成功 (*^▽^*)\",\"zh-tw\":\"複製成功 (*^▽^*)\"}},\"code_block\":{\"expand\":20},\"icon_font\":\"4552607_0khxww3tj3q9\",\"outdate\":{\"daysago\":180,\"enable\":false,\"message\":{\"en\":\"This article was last updated on {time}. Please note that the content may no longer be applicable.\",\"ja\":\"この記事は最終更新日：{time}。記載内容が現在有効でない可能性がありますのでご注意ください。\",\"pt-br\":\"Este artigo foi atualizado pela última vez em {time}. Observe que o conteúdo pode não ser mais aplicável.\",\"zh-cn\":\"本文最后更新于 {time}，请注意文中内容可能已不适用。\",\"zh-tw\":\"本文最後更新於 {time}，請注意文中內容可能已不適用。\"}}}");
+  
+</script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="preload"
+  as="style"
+  href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7cNoto%20Serif%20SC:400,400italic,700,700italic%7c&amp;display=swap"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7cNoto%20Serif%20SC:400,400italic,700,700italic%7c&amp;display=swap"
+  media="print"
+  onload="this.media='all'"
+/>
+<link
+    rel="preload"
+    href="//at.alicdn.com/t/c/font_4552607_0khxww3tj3q9.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin="anonymous"
+  /><link rel="stylesheet" href="/css/loader.min.ac746e154f756f8220326eeb52a719f142ab038be5a8ddf30ea5ef15ef2356ea.css" />
+<meta property="og:type" content="website" />
+  <meta property="og:title" content="【文章笔记】【模型融合】Model Merging in Pre-training of Large Language Models | zengbiaojie & zhoujuan" />
+  <meta
+    property="og:description"
+    content="我们是人工智能领域大科学家！"
+  />
+  <meta property="og:url" content="https://zz.hanhan.live/post/modelmerging/" />
+  <meta
+    property="og:site_name"
+    content="小 z 的金屋"
+  />
+  <meta
+    property="og:image"
+    content="/"
+  />
+  <meta property="article:author" content="zengbiaojie & zhoujuan" />
+  <meta property="article:published_time" content="2025-08-04T12:40:52&#43;08:00" />
+  <meta property="article:modified_time" content="2025-08-04T12:40:52&#43;08:00" /><meta property="article:tag" content="模型融合" /><meta name="twitter:card" content="summary" />
+  <meta name="twitter:image" content="/" />
+<link rel="shortcut icon" href="/favicon.ico"><link rel="stylesheet" href="/css/main.min.6b3f96d0d04f98678149e3cf7e64b2c567b840637aada3b4698b20028152a942.css" />
+<link
+    rel="preload"
+    as="style"
+    href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css"
+    integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei&#43;Zx/1oA/0l8ysE" crossorigin="anonymous"onload="this.onload=null;this.rel='stylesheet'"
+  /><link
+    rel="preload"
+    as="style"
+    href="https://npm.webcache.cn/katex@0.16.22/dist/katex.min.css"
+    integrity="sha384-5TcZemv2l/9On385z///&#43;d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP" crossorigin="anonymous"onload="this.onload=null;this.rel='stylesheet'"
+  /><script
+    src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js"
+    integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script><link
+    rel="stylesheet"
+    href="https://npm.webcache.cn/@reimujs/aos@0.1.2/dist/aos.css"
+    integrity="sha384-GMRP93c6Hkz9JVKGAuRR3nTS7M07RwPgTFenXiosjq2VbVgvdDNcz1g6Mkj8AONa" crossorigin="anonymous"/></head>
+  <body><div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi rotate"><svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+          M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg></div><div class="loading-word">新建了别催了...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script><div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+<div id="lang-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+本文章没有找到对应的语言版本
+</div>
+<div id="heatmap-tooltip"></div><div id="container">
+      <div id="wrap"><div id="header-nav">
+  <nav id="main-nav"><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/">首页</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/archives">归档</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/about">经历</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/plan">计划</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/friend">友链</a>
+      </span><a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav"></nav></div>
+<header id="header"><picture></picture><img crossorigin="anonymous" fetchpriority="high" src="/images/banner.png" alt="【文章笔记】【模型融合】Model Merging in Pre-training of Large Language Models"><div id="header-outer">
+    <div id="header-title"><a href="/" id="logo">
+            <h1 data-aos="slide-up">【文章笔记】【模型融合】Model Merging in Pre-training of Large Language Models</h1>
+          </a><h2 id="subtitle-wrap" data-aos="slide-down"></h2></div>
+  </div>
+</header><div id="content"
+          
+          class="sidebar-right"  ><aside id="sidebar"><div class="sidebar-wrapper wrap-sticky">
+    <div
+      class="sidebar-wrap"
+      data-aos="fade-up"
+    ><div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#摘要">摘要</a></li>
+    <li><a href="#1-引言">1. 引言</a></li>
+    <li><a href="#2-文章工作及思考">2. 文章工作及思考</a>
+      <ul>
+        <li><a href="#21-背景动机及挑战">2.1 背景、动机及挑战</a></li>
+        <li><a href="#22-工作内容">2.2 工作内容</a></li>
+        <li><a href="#23-qa">2.3 QA</a></li>
+        <li><a href="#24-消融实验">2.4 消融实验</a></li>
+        <li><a href="#25-思考">2.5 思考</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-总结">3. 总结</a></li>
+    <li><a href="#2-基础知识">2. 基础知识</a>
+      <ul>
+        <li><a href="#21-时间序列预测基本方法">2.1 时间序列预测基本方法</a></li>
+        <li><a href="#22-gradnorm">2.2 GradNorm</a></li>
+        <li><a href="#23-模型退火阶段">2.3 模型退火阶段</a></li>
+        <li><a href="#24-warmup-stable-decaywsd">2.4 Warmup-Stable-Decay(WSD)</a></li>
+        <li><a href="#25-learning-rate-schedulerlrs">2.5 Learning Rate Scheduler(LRS)</a></li>
+        <li><a href="#26-cosine-annealing">2.6 cosine annealing</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div></div>
+          <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img
+    data-src="/avatar/avatar.jpg"
+    data-sizes="auto"
+    alt="zengbiaojie &amp; zhoujuan"
+    class="lazyload"
+  />
+  <div class="sidebar-author-name">zengbiaojie &amp; zhoujuan</div>
+  <div class="sidebar-description">我们是人工智能领域大科学家！</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div><div class="sidebar-state-number">8</div>
+  </div>
+  <a class="sidebar-state-category" href="/categories/" aria-label="sidebar-state-category-link">
+    <div>分类</div>
+    <div class="sidebar-state-number">
+      3
+    </div>
+  </a>
+  <a class="sidebar-state-tag" href="/tags/" aria-label="sidebar-state-tag-link">
+    <div>标签</div>
+    <div class="sidebar-state-number">12</div>
+  </a>
+</div>
+<div class="sidebar-social"></div>
+<div class="sidebar-menu"><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/"
+        aria-label="首页"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">首页</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/archives"
+        aria-label="归档"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">归档</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/about"
+        aria-label="经历"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">经历</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/plan"
+        aria-label="计划"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">计划</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/friend"
+        aria-label="友链"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">友链</div>
+    </div></div>
+</div><div class="sidebar-btn-wrapper" style="position:static">
+            <div class="sidebar-toc-btn current"></div>
+            <div class="sidebar-common-btn"></div>
+          </div></div>
+  </div>
+
+  <div class="sidebar-widget"></div></aside>
+<section id="main"><article
+  class="h-entry article"
+  itemprop="blogPost"
+  itemscope
+  itemtype="https://schema.org/BlogPosting"
+>
+  <div
+    class="article-inner"
+    data-aos="fade-up"
+  >
+    <div class="article-meta"><div class="article-date">
+  <span
+    class="article-date-link"
+    data-aos="zoom-in"
+  >
+    <time datetime="2025-08-04 12:40:52 &#43;0800 CST" itemprop="datePublished"
+      >2025-08-04</time
+    >
+    <time style="display: none;" id="post-update-time"
+      >2025-08-04</time
+    >
+  </span>
+</div>
+<div class="article-category"><a
+      class="article-category-link"
+      href="/categories/%e6%96%87%e7%ab%a0%e9%98%85%e8%af%bb"
+      data-aos="zoom-in"
+      >文章阅读</a
+    ></div>
+</div>
+    <div class="hr-line"></div><div class="e-content article-entry" itemprop="articleBody"><p><a href="https://arxiv.org/abs/2505.12082v1">Model Merging in Pre-training of Large Language Models</a></p>
+<h2 id="摘要">
+<a class="header-anchor" href="#%e6%91%98%e8%a6%81"></a>
+摘要
+</h2><p>模型merge已成为增强大型语言模型的一种有前景的技术，尽管它在大规模预训练中的应用仍然相对未被探索。<strong>本文对预训练过程中的模型merge技术进行了全面的研究</strong>。通过对从数百万到超过1000亿个参数的密集和混合专家（MoE）架构的广泛实验，我们证明，merge以恒定学习率训练的检查点不仅可以显著提高性能，还可以准确预测退火行为。这些改进<strong>不仅提高了模型开发的效率，还显著降低了培训成本</strong>。我们对合并策略和超参数的详细消融研究为潜在机制提供了新的见解，同时揭示了新的应用。通过全面的实验分析，我们为有效的模型合并提供了开源社区实用的预训练指南。</p>
+<h2 id="1-引言">
+<a class="header-anchor" href="#1-%e5%bc%95%e8%a8%80"></a>
+1. 引言
+</h2><p>现代大型语言模型已经证明了其卓越的能力，在各种任务中得到了广泛的应用。尽管LLM在基本任务中表现出色，但仍然面临着几个关键挑战，包括广泛的预培训成本、特定领域后培训的低效性、不可精确预测的性能扩展以及大规模培训的不稳定性。模型merge作为一个相对年轻的话题，为缓解这些实际挑战提供了一种有前景的方法。</p>
+<p>最近，模型merge的好处主要在后训练阶段进行了研究，在这个阶段，几个针对不同下游任务进行微调的模型被组合成一个单一但更通用的模型。例如，使用DARE方法将WizardLM与WizardMath合并，可以显著提高GSM8K的性能，使其得分从2.2提高到66.3。相比之下，关于预训练阶段模型合并的研究仍然很少。这种预训练合并通常涉及组合来自单个训练轨迹的检查点，如LAWA所探索的，该LAWA利用模型合并来加速LLM训练。然而，随着模型和数据的急剧扩展，独立研究人员很难评估模型合并对大规模模型的影响，这主要是由于从广泛的预训练中获得中间检查点的机会有限。尽管DeepSeek和LLaMA-3都表示他们采用了模型合并技术进行模型开发，但关于这些技术的详细信息尚未公开披露。</p>
+<p>在这项工作中，我们主要关注预训练阶段的模型合并，提出了预训练模型平均（<strong>PMA</strong>），这是一种在预训练阶段进行模型级权重合并的新策略。为了全面评估PMA，我们从头开始训练了一组不同大小和架构的LLM，包括参数范围从411M到70B的Dense模型，以及激活/总参数范围从0.7B/7B到20B/200B的混合专家（MoE）架构。我们首先研究了PMA的性能影响，并在预热稳定衰减（WSD）学习计划的不同阶段建立了系统评估，该计划最近成为LLM预训练的lr调度器的流行选择。实验结果表明，在稳定训练阶段进行模型合并，可以在不同训练步骤中获得一致的性能增益。更值得注意的是，在余弦衰减阶段的早期应用PMA通常会获得与最终阶段退火相当甚至更优的性能。这些发现表明，在具有常量$lr$的漫长预训练阶段，PMA可以作为退火性能的快速、可靠但低成本的模拟器，实现更快的验证周期和显著的计算节省。</p>
+<p>在我们的PMA框架的基础上，我们首先使用各种流行的merge策略来评估其性能，包括简单移动平均（SMA）、加权移动平均（WMA）和指数移动平均（EMA）。值得注意的是，我们的实验表明，这些方法之间的性能差异逐渐变得可以忽略不计。我们进一步研究了PMA的这些重要因素，即每个merge checkpoint之间的间隔、merge中涉及的模型数量和模型大小，将如何影响合并性能。<strong>我们的分析揭示了两个重要发现：第一，最优合并区间与模型大小具有明显的比例关系。其次，在合并过程中加入更多检查点，可以在训练完成后持续提高性能</strong>。</p>
+<p>此外，我们还研究了PMA是否可以为连续的持续训练(CT)或监督微调(SFT)阶段产生更有效的初始化权重，以提高下游模型的性能。我们实际观察到，与通常使用最新可用检查点初始化这些阶段相比，使用PMA进入CT和SFT阶段可以产生更平滑的GradNorm曲线，从而有助于稳定训练动态，而不会损害性能。这一发现激发了模型合并在训练稳定中的新应用，我们称之为PMA-init。我们证明，在LLM训练经历严重不可恢复的损失尖峰和训练动态中断的情况下，在N个先前检查点上应用PMA-init来恢复训练，可以从不稳定的训练轨迹中可靠地恢复。</p>
+<p>总之，我们的论文做出了以下主要贡献：</p>
+<ol>
+<li>我们提出了预训练模型平均（PMA）策略，这是一种在LLM预训练期间进行模型合并的新框架。通过跨模型尺度（从数百万到超过100B个参数）的广泛实验，我们证明，merge稳定训练阶段的检查点可以产生一致且显著的性能改进。</li>
+<li>我们深入研究了用于权重初始化的模型合并（PMA-init）的新应用，以帮助稳定训练过程，而不会损害下游性能，特别是当它遭受不可恢复的损失尖峰和破碎的训练动态时。通过广泛的实验，我们证明了PMA-init在CT和SFT阶段的有效性。</li>
+<li>我们还全面消除了各种模型合并技术及其相关的超参数。我们的研究结果为研究界提供了实用的预训练指南，并有效地进行了模型合并。然而，PMA的低成本和快速部署也使其成为预训练过程的可靠和经济的监测器，可以灵活地模拟退火后的最终模型性能。</li>
+</ol>
+<h2 id="2-文章工作及思考">
+<a class="header-anchor" href="#2-%e6%96%87%e7%ab%a0%e5%b7%a5%e4%bd%9c%e5%8f%8a%e6%80%9d%e8%80%83"></a>
+2. 文章工作及思考
+</h2><h3 id="21-背景动机及挑战">
+<a class="header-anchor" href="#21-%e8%83%8c%e6%99%af%e5%8a%a8%e6%9c%ba%e5%8f%8a%e6%8c%91%e6%88%98"></a>
+2.1 背景、动机及挑战
+</h3><p><strong>背景和动机</strong>：现代大型语言模型已经证明了其卓越的能力，在各种任务中得到了广泛的应用。尽管LLM在基本任务中表现出色，但仍然面临着几个关键挑战，包括广泛的预培训成本、特定领域后培训的低效性、不可精确预测的性能扩展以及大规模培训的不稳定性。模型merge作为一个相对年轻的话题，为缓解这些实际挑战提供了一种有前景的方法，但是目前关于预训练阶段模型合并的研究仍然很少。</p>
+<p><strong>挑战点</strong>：随着模型和数据的急剧扩展，独立研究人员很难评估模型合并对大规模模型的影响，这主要是由于从广泛的预训练中获得中间checkpoint的机会有限。且虽然DeepSeek和LLaMA-3都表示他们采用了模型merge技术进行模型开发，但关于这些技术的详细信息尚未公开披露。</p>
+<h3 id="22-工作内容">
+<a class="header-anchor" href="#22-%e5%b7%a5%e4%bd%9c%e5%86%85%e5%ae%b9"></a>
+2.2 工作内容
+</h3><ol>
+<li>提出了PMA(Pre-trained Model Average)方法来应对预训练阶段模型merge的挑战，PMA是一种在预训练阶段进行模型级权重合并的新策略。做了大量实验证明了merge稳定训练阶段的检查点可以产生一致且显著的性能改进。</li>
+<li>提出了用PMA-init进行权重初始化，通过大量实验证明了PMA-init在CT和SFT阶段的有效性。</li>
+<li>全面消除了各种模型merge技术及其相关的超参数，使其可以低成本快速部署。</li>
+</ol>
+<h3 id="23-qa">
+<a class="header-anchor" href="#23-qa"></a>
+2.3 QA
+</h3><h4 id="231-模型merge对模型性能有何影响">
+<a class="header-anchor" href="#231-%e6%a8%a1%e5%9e%8bmerge%e5%af%b9%e6%a8%a1%e5%9e%8b%e6%80%a7%e8%83%bd%e6%9c%89%e4%bd%95%e5%bd%b1%e5%93%8d"></a>
+2.3.1 模型merge对模型性能有何影响？
+</h4><p>文章在模型预训练过程中采用了预热-稳定-衰减（WSD）策略，结合了恒定学习率和随后的余弦衰减阶段，并在这两个阶段都做了实验探索模型merge的效果。</p>
+<p>实验发现，在恒定学习率阶段，merge后的模型在多个下游任务中都有明显的性能提升，如图所示：</p>
+<p><img src="/post/modelmerging/528837e2-2cfd-4c2a-a4ac-3fc1263c3feb.png" alt="528837e2-2cfd-4c2a-a4ac-3fc1263c3feb"></p>
+<p>在余弦退火阶段进行merge后，随着学习率逐渐降低，模型稳步收敛，性能持续提高，在PMA退火早期和结束时性能相当，如图所示：</p>
+<p><img src="/post/modelmerging/5cf2905c-c1f1-454b-837d-64aa1c28b70f.png" alt="5cf2905c-c1f1-454b-837d-64aa1c28b70f"></p>
+<p>因此，文章认为模型merge有效，且可以只用预热-稳定阶段和PMA，跳过衰减阶段避免学习率的调整；使用恒定学习率进行预训练并结合模型merge，可以在训练过程中的任何阶段有效匹配退火模型的性能，而不需要学习率退火。这种方法可以加快验证速度同时减少计算资源。</p>
+<h4 id="232-不同模型merge方法对最终性能的影响">
+<a class="header-anchor" href="#232-%e4%b8%8d%e5%90%8c%e6%a8%a1%e5%9e%8bmerge%e6%96%b9%e6%b3%95%e5%af%b9%e6%9c%80%e7%bb%88%e6%80%a7%e8%83%bd%e7%9a%84%e5%bd%b1%e5%93%8d"></a>
+2.3.2 不同模型merge方法对最终性能的影响？
+</h4><p>文章主要比较了SMA、WMA、EMA三种方法的性能：</p>
+<p><img src="/post/modelmerging/4de0eedc-cfcb-4a5e-b5fe-fe3d47ea66f5.png" alt="4de0eedc-cfcb-4a5e-b5fe-fe3d47ea66f5"></p>
+<p>考虑到简便性和稳定性，文章最后用的是SMA。</p>
+<h4 id="233-如何确定模型的最佳merge区间和权重数">
+<a class="header-anchor" href="#233-%e5%a6%82%e4%bd%95%e7%a1%ae%e5%ae%9a%e6%a8%a1%e5%9e%8b%e7%9a%84%e6%9c%80%e4%bd%b3merge%e5%8c%ba%e9%97%b4%e5%92%8c%e6%9d%83%e9%87%8d%e6%95%b0"></a>
+2.3.3 如何确定模型的最佳merge区间和权重数？
+</h4><p>主要是做实验发现的，实验发现最佳间隔随着模型规模的增大而增大，实验结果：</p>
+<p><img src="/post/modelmerging/6a06539e-2bdb-49d8-9506-786e3ad3f0d5.png" alt="6a06539e-2bdb-49d8-9506-786e3ad3f0d5"></p>
+<p><code>&lt;font color=&quot;red&quot;&gt;</code>问题：为什么204B的时候16B和32B的效果差那么多，为什么说间隔大的时候初始训练阶段受不稳定权重影响大？<code>&lt;/font&gt;</code></p>
+<blockquote>
+<p>This is likely because large intervals incorporated unstable weights from the initial training phase, leading to significant weight disparities and suboptimal outcomes.</p></blockquote>
+<h4 id="234-merge预训练模型是否有助于下游训练">
+<a class="header-anchor" href="#234-merge%e9%a2%84%e8%ae%ad%e7%bb%83%e6%a8%a1%e5%9e%8b%e6%98%af%e5%90%a6%e6%9c%89%e5%8a%a9%e4%ba%8e%e4%b8%8b%e6%b8%b8%e8%ae%ad%e7%bb%83"></a>
+2.3.4 merge预训练模型是否有助于下游训练？
+</h4><p>文章用PMA（PMA-init）初始化了下游训练，主要研究了在CT阶段和SFT阶段的效果。</p>
+<p><strong>CT阶段</strong>：做了消融实验，评估了CT阶段的PMA-init在不同学习率计划下的灵敏度。实验发现，使用PMA的模型在训练结束时可以收敛到和baseline差不多的性能水平，同时PMA-init不需要进行广泛的学习率调整。</p>
+<p><img src="/post/modelmerging/fe5fb76f-107c-4b08-baa9-aab470d21016.png" alt="fe5fb76f-107c-4b08-baa9-aab470d21016"></p>
+<p><strong>SFT阶段</strong>：实验发现，PMA的性能优于baseline。</p>
+<p><img src="/post/modelmerging/dd37ad89-a223-481c-9643-89a1261bb6f9.png" alt="dd37ad89-a223-481c-9643-89a1261bb6f9"></p>
+<h3 id="24-消融实验">
+<a class="header-anchor" href="#24-%e6%b6%88%e8%9e%8d%e5%ae%9e%e9%aa%8c"></a>
+2.4 消融实验
+</h3><p>就是2.3.4的CT阶段和SFT阶段做的实验。</p>
+<h3 id="25-思考">
+<a class="header-anchor" href="#25-%e6%80%9d%e8%80%83"></a>
+2.5 思考
+</h3><h4 id="251-文章脉络怎么讲的story怎么做的实验">
+<a class="header-anchor" href="#251-%e6%96%87%e7%ab%a0%e8%84%89%e7%bb%9c%e6%80%8e%e4%b9%88%e8%ae%b2%e7%9a%84story%e6%80%8e%e4%b9%88%e5%81%9a%e7%9a%84%e5%ae%9e%e9%aa%8c"></a>
+2.5.1 文章脉络，怎么讲的story？怎么做的实验？
+</h4><p>讲背景和动机-&gt;提出自己的方法-&gt;做实验论证自己的方法有效果。</p>
+<p>实验方面主要是对比其他merge方法去进行横向对比，对PMA-init，去做了该初始化后对下游任务的效果进行实验对比，然后比较了PMA和baseline在不同规模模型下的效果。</p>
+<h4 id="252-pma">
+<a class="header-anchor" href="#252-pma"></a>
+2.5.2 PMA？
+</h4><p>PMA 就是在预训练过程中，定期将不同训练阶段的模型权重进行平均，生成一个「merge模型」。这是因为：<strong>预训练后期的模型权重往往在参数空间中探索了不同的局部最优解，通过平均化可以抵消单个模型的偏差，逼近更优的全局解。</strong></p>
+<h4 id="253-不足">
+<a class="header-anchor" href="#253-%e4%b8%8d%e8%b6%b3"></a>
+2.5.3 不足？
+</h4><h2 id="3-总结">
+<a class="header-anchor" href="#3-%e6%80%bb%e7%bb%93"></a>
+3. 总结
+</h2><p>文章提出这项研究开创了在大规模模型具有挑战性的预训练阶段对模型合并进行更深入探索的先河。通过训练一系列MoE和Dense模型并执行严格的消融，研究发现，merge稳定训练阶段的checkpoint不仅可以显著提高性能并预测退火，还可以简化开发并降低成本。</p>
+<h2 id="2-基础知识">
+<a class="header-anchor" href="#2-%e5%9f%ba%e7%a1%80%e7%9f%a5%e8%af%86"></a>
+2. 基础知识
+</h2><h3 id="21-时间序列预测基本方法">
+<a class="header-anchor" href="#21-%e6%97%b6%e9%97%b4%e5%ba%8f%e5%88%97%e9%a2%84%e6%b5%8b%e5%9f%ba%e6%9c%ac%e6%96%b9%e6%b3%95"></a>
+2.1 时间序列预测基本方法
+</h3><p><a href="https://zhuanlan.zhihu.com/p/430537478">(77 封私信 / 80 条消息) 时间序列预测基本方法&ndash;移动平均（SMA、EMA、WMA） - 知乎</a></p>
+<h3 id="22-gradnorm">
+<a class="header-anchor" href="#22-gradnorm"></a>
+2.2 GradNorm
+</h3><p>多任务学习中动态调整loss的$w$的算法。</p>
+<p><a href="https://blog.csdn.net/taoqick/article/details/120615004">动态调整多任务学习：GradNorm算法详解-CSDN博客</a></p>
+<h3 id="23-模型退火阶段">
+<a class="header-anchor" href="#23-%e6%a8%a1%e5%9e%8b%e9%80%80%e7%81%ab%e9%98%b6%e6%ae%b5"></a>
+2.3 模型退火阶段
+</h3><h3 id="24-warmup-stable-decaywsd">
+<a class="header-anchor" href="#24-warmup-stable-decaywsd"></a>
+2.4 Warmup-Stable-Decay(WSD)
+</h3><p>预热-稳定-衰减</p>
+<h3 id="25-learning-rate-schedulerlrs">
+<a class="header-anchor" href="#25-learning-rate-schedulerlrs"></a>
+2.5 Learning Rate Scheduler(LRS)
+</h3><p>学习率调度器</p>
+<p><a href="https://zhuanlan.zhihu.com/p/1037987798#:~:text=%E8%80%8C%E5%9C%A8%E6%95%B0%E6%8D%AE%E6%89%A9%E5%B1%95%E6%96%B9%E9%9D%A2%EF%BC%8C%E4%BB%96%E4%BB%AC%E5%BC%95%E5%85%A5%E4%BA%86%E4%B8%80%E7%A7%8D%E5%8F%AB%E5%81%9A%E2%80%9C%20%E9%A2%84%E7%83%AD-%E7%A8%B3%E5%AE%9A-%E8%A1%B0%E5%87%8F%20%E2%80%9D%20%EF%BC%88Warmup-Stable-Decay%2C%20WSD%EF%BC%89%E7%9A%84%E5%AD%A6%E4%B9%A0%E7%8E%87%E8%B0%83%E5%BA%A6%E5%99%A8%EF%BC%88Learning%20Rate,Scheduler%2C%20LRS%EF%BC%89%EF%BC%8C%E8%BF%99%E7%A7%8D%E8%B0%83%E5%BA%A6%E5%99%A8%E6%9C%89%E5%8A%A9%E4%BA%8E%E6%8C%81%E7%BB%AD%E8%AE%AD%E7%BB%83%E5%92%8C%E9%A2%86%E5%9F%9F%E9%80%82%E5%BA%94%E3%80%82%20%E4%BB%96%E4%BB%AC%E8%BF%98%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E4%BA%86WSD%20LRS%E5%9C%A8%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E6%9C%89%E8%B6%A3%E7%8E%B0%E8%B1%A1%E3%80%82%20%E9%80%9A%E8%BF%87%E4%BD%BF%E7%94%A8WSD%20LRS%EF%BC%8C%E4%BD%9C%E8%80%85%E8%83%BD%E5%A4%9F%E9%AB%98%E6%95%88%E5%9C%B0%E7%A0%94%E7%A9%B6%E6%95%B0%E6%8D%AE%E5%92%8C%E6%A8%A1%E5%9E%8B%E4%B9%8B%E9%97%B4%E7%9A%84%E6%89%A9%E5%B1%95%E8%A7%84%E5%BE%8B%EF%BC%8C%E8%80%8C%E4%B8%8D%E9%9C%80%E8%A6%81%E8%BF%9B%E8%A1%8C%E5%A4%A7%E9%87%8F%E7%9A%84%E9%87%8D%E6%96%B0%E8%AE%AD%E7%BB%83%E5%AE%9E%E9%AA%8C%E3%80%82">(77 封私信 / 80 条消息) 论文笔记_MiniCPM：揭示小型语言模型在可扩展训练策略下的潜力 - 知乎</a></p>
+<h3 id="26-cosine-annealing">
+<a class="header-anchor" href="#26-cosine-annealing"></a>
+2.6 cosine annealing
+</h3><p><a href="https://blog.csdn.net/weixin_35848967/article/details/108493217">学习率衰减之余弦退火(CosineAnnealing）-CSDN博客</a></p>
+</div>
+    <footer class="article-footer"><blockquote class="article-copyright"><p><strong><span class="icon-user icon"></span>本文作者：</strong>zengbiaojie &amp; zhoujuan @ 小 z 的金屋</p><p>
+      <strong><span class="icon-link icon"></span>本文链接：</strong><a href="https://zz.hanhan.live/post/modelmerging/">https://zz.hanhan.live/post/modelmerging/</a>
+    </p><p><strong><span class="icon-pencil icon"></span>本文标题：</strong>【文章笔记】【模型融合】Model Merging in Pre-training of Large Language Models</p><p><strong><span class="icon-calendar icon"></span>本文发布时间：</strong>2025-08-04 12:40:52</p><p>
+      
+      <strong><span class="icon-copyright icon"></span>本文版权：</strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！
+    </p>
+    <span class="icon-creative-commons article-copyright-bg"></span></blockquote>
+<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in">
+      <a
+        class="article-tag-list-link"
+        href="/tags/%e6%a8%a1%e5%9e%8b%e8%9e%8d%e5%90%88"
+        rel="tag"
+        >模型融合</a
+      >
+    </li></ul>
+</footer>
+  </div><nav
+    id="article-nav"
+    data-aos="fade-up"
+  ><div class="article-nav-link-wrap article-nav-link-left"><img
+              data-src="/images/cha2.png"
+              data-sizes="auto"
+              alt="【文章笔记】【语义相似性】Advancing Semantic Textual Similarity Modeling"
+              class="lazyload"
+            /><a href="/post/advancing-semantic-textual-similarity-modeling/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">【文章笔记】【语义相似性】Advancing Semantic Textual Similarity Modeling</h3>
+      </div><div class="article-nav-link-wrap article-nav-link-right"><img
+              data-src="/images/cha5.png"
+              data-sizes="auto"
+              alt="【文章笔记】【模型融合】AdaMerging"
+              class="lazyload"
+            /><a href="/post/adamergin/"></a>
+        <div class="article-nav-caption">后一篇</div>
+        <h3 class="article-nav-title">【文章笔记】【模型融合】AdaMerging</h3>
+      </div></nav></article></section>
+        </div><footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info"><div>
+      <span class="icon-copyright"></span>2020-2025<span class="footer-info-sep rotate"></span>
+      zengbiaojie &amp; zhoujuan
+    </div><div>
+        基于&nbsp;<a
+          href="https://gohugo.io/"
+          target="_blank"
+          >Hugo</a
+        >&nbsp; Theme.<a
+          href="https://github.com/D-Sketon/hugo-theme-reimu"
+          target="_blank"
+          >Reimu</a
+        >
+      </div><div>
+        <span class="icon-brush"
+          >&nbsp;24.9k</span
+        >
+        &nbsp;|&nbsp;
+        <span class="icon-coffee">&nbsp;00:52</span>
+      </div><div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv"
+          >总访问量&nbsp;<span
+            id="busuanzi_value_site_pv"
+          ></span
+        ></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv"
+          >总访客量&nbsp;<span
+            id="busuanzi_value_site_uv"
+          ></span
+        ></span>
+      </div></div>
+</footer>
+<div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div><div id="mask" class="hide"></div>
+      </div><nav id="mobile-nav">
+  <div class="sidebar-wrap"><div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#摘要">摘要</a></li>
+    <li><a href="#1-引言">1. 引言</a></li>
+    <li><a href="#2-文章工作及思考">2. 文章工作及思考</a>
+      <ul>
+        <li><a href="#21-背景动机及挑战">2.1 背景、动机及挑战</a></li>
+        <li><a href="#22-工作内容">2.2 工作内容</a></li>
+        <li><a href="#23-qa">2.3 QA</a></li>
+        <li><a href="#24-消融实验">2.4 消融实验</a></li>
+        <li><a href="#25-思考">2.5 思考</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-总结">3. 总结</a></li>
+    <li><a href="#2-基础知识">2. 基础知识</a>
+      <ul>
+        <li><a href="#21-时间序列预测基本方法">2.1 时间序列预测基本方法</a></li>
+        <li><a href="#22-gradnorm">2.2 GradNorm</a></li>
+        <li><a href="#23-模型退火阶段">2.3 模型退火阶段</a></li>
+        <li><a href="#24-warmup-stable-decaywsd">2.4 Warmup-Stable-Decay(WSD)</a></li>
+        <li><a href="#25-learning-rate-schedulerlrs">2.5 Learning Rate Scheduler(LRS)</a></li>
+        <li><a href="#26-cosine-annealing">2.6 cosine annealing</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div></div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img
+    data-src="/avatar/avatar.jpg"
+    data-sizes="auto"
+    alt="zengbiaojie &amp; zhoujuan"
+    class="lazyload"
+  />
+  <div class="sidebar-author-name">zengbiaojie &amp; zhoujuan</div>
+  <div class="sidebar-description">我们是人工智能领域大科学家！</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div><div class="sidebar-state-number">8</div>
+  </div>
+  <a class="sidebar-state-category" href="/categories/" aria-label="sidebar-state-category-link">
+    <div>分类</div>
+    <div class="sidebar-state-number">
+      3
+    </div>
+  </a>
+  <a class="sidebar-state-tag" href="/tags/" aria-label="sidebar-state-tag-link">
+    <div>标签</div>
+    <div class="sidebar-state-number">12</div>
+  </a>
+</div>
+<div class="sidebar-social"></div>
+<div class="sidebar-menu"><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/"
+        aria-label="首页"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">首页</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/archives"
+        aria-label="归档"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">归档</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/about"
+        aria-label="经历"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">经历</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/plan"
+        aria-label="计划"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">计划</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/friend"
+        aria-label="友链"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">友链</div>
+    </div></div>
+</div></div><div class="sidebar-btn-wrapper">
+        <div class="sidebar-toc-btn current"></div>
+        <div class="sidebar-common-btn"></div>
+      </div></nav>
+</div><script
+    src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js"
+    integrity="sha384-3gT/vsepWkfz/ff7PpWNUeMzeWoH3cDhm/A8jM7ouoAK0/fP/9bcHHR5kHq2nf&#43;e" crossorigin="anonymous"></script><script
+    src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js"
+    integrity="sha384-J08i8An/QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script><script
+    src="https://npm.webcache.cn/material-theme@1.0.0/dist/material-theme.umd.js"
+    integrity="sha384-vLev0II0HKFaxkcm&#43;/7kX5IGwVFBASkGchU311wmU/veIj2bB0UcBkQbW6yw2asK" crossorigin="anonymous"></script><script src="/js/main.js" integrity="" crossorigin="anonymous" ></script><script src="/js/aos.js" integrity="" crossorigin="anonymous" ></script><script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", aosInit);
+    } else {
+      aosInit();
+    }
+  </script><script src="/js/pjax_main.js" integrity="" crossorigin="anonymous" data-pjax></script><script
+    src="https://npm.webcache.cn/mouse-firework@0.1.1/dist/index.umd.js"
+    integrity="sha384-8LyaidD9GPxQQgLJO/WRw/O2h3BoNq/ApI/ecpvM6RsrCz2qP2ppBXUKihP4V/2d" crossorigin="anonymous"></script><script>
+  if (window.firework) {
+    const options = JSON.parse("{\"excludeelements\":[\"a\",\"button\"],\"particles\":[{\"colors\":[\"var(--red-1)\",\"var(--red-2)\",\"var(--red-3)\",\"var(--red-4)\"],\"duration\":[1200,1800],\"easing\":\"easeOutExpo\",\"move\":[\"emit\"],\"number\":20,\"shape\":\"circle\",\"shapeOptions\":{\"alpha\":[0.3,0.5],\"radius\":[16,32]}},{\"colors\":[\"var(--red-0)\"],\"duration\":[1200,1800],\"easing\":\"easeOutExpo\",\"move\":[\"diffuse\"],\"number\":1,\"shape\":\"circle\",\"shapeOptions\":{\"alpha\":[0.2,0.5],\"lineWidth\":6,\"radius\":20}}]}");
+    options.excludeElements = options.excludeelements;
+    delete options.excludeelements;
+    window.firework(options);
+  }
+</script>
+
+<div id="lazy-script">
+  <div><script data-pjax>
+        window.REIMU_POST = {
+          author: "zengbiaojie \u0026 zhoujuan",
+          title: "【文章笔记】【模型融合】Model Merging in Pre-training of Large Language Models",
+          url: "https:\/\/zz.hanhan.live\/post\/modelmerging\/",
+          description: "Model Merging in Pre-training of Large Language Models\n摘要\r模型merge已成为增强大型语言模型的一种有前景的技术，尽管它在大规模预训练中的应用仍然相对未被探索。本文对预训练过程中的模型merge技术进行了全面的研究。通过对从数百万到超过1000亿个参数的密集和混合专家（MoE）架构的广泛实验，我们证明，merge以恒定学习率训练的检查点不仅可以显著提高性能，还可以准确预测退火行为。这些改进不仅提高了模型开发的效率，还显著降低了培训成本。我们对合并策略和超参数的详细消融研究为潜在机制提供了新的见解，同时揭示了新的应用。通过全面的实验分析， …",
+          cover: "https:\/\/zz.hanhan.live\/images\/banner.png",
+        };
+      </script><script src="/js/insert_highlight.js" integrity="" crossorigin="anonymous" data-pjax></script><script type="module" data-pjax>const PhotoSwipeLightbox = (await safeImport("https:\/\/npm.webcache.cn\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js", "sha384-DiL6M\/gG\u002bwmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF\/N6lrZi\/")).default;const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',pswpModule: () => safeImport("https:\/\/npm.webcache.cn\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8\u002boTJ7m3DfYEWX1fu1scuS4\u002bs")}).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',pswpModule: () => safeImport("https:\/\/npm.webcache.cn\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8\u002boTJ7m3DfYEWX1fu1scuS4\u002bs")}).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script><script
+    src="https://npm.webcache.cn/katex@0.16.22/dist/katex.min.js"
+    data-pjaxintegrity="sha384-cMkvdD8LoxVzGF/RPUKAcvmm49FQ0oxwDF3BGKtDXcEc&#43;T1b2N&#43;teh/OJfpU0jr6" crossorigin="anonymous"></script><script
+    src="https://npm.webcache.cn/katex@0.16.22/dist/contrib/auto-render.min.js"
+    data-pjaxintegrity="sha384-hCXGrW6PitJEwbkoStFjeJxv&#43;fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous"></script><script data-pjax>
+          var renderMath = () => {
+            if (!window.renderMathInElement) return;
+            window.renderMathInElement(_$("article"), {
+              delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "\\[", right: "\\]", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+              ],
+            });
+          };
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", renderMath, { once: true });
+          } else {
+            renderMath();
+          }
+        </script></div>
+</div><script
+    src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js"
+    asyncintegrity="sha384-0M75wtSkhjIInv4coYlaJU83&#43;OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id&#43;S" crossorigin="anonymous"></script><script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+  </script><script>
+  const reimuCopyright = String.raw`
+   ______     ______     __     __    __     __  __    
+  /\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+  \ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+   \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+    \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                    
+  `;
+  console.log(String.raw`%c ${reimuCopyright}`, "color: #ff5252;");
+  console.log(
+    "%c Theme.Reimu" + " %c https://github.com/D-Sketon/hugo-theme-reimu ",
+    "color: white; background: #ff5252; padding:5px 0;",
+    "padding:4px;border:1px solid #ff5252;",
+  );
+</script></body>
+</html>

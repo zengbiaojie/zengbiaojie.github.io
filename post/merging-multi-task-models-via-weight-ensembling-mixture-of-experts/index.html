@@ -1,0 +1,743 @@
+<!doctype html>
+<html
+  lang="zh-cn" 
+  data-theme-mode="auto"
+  >
+  <head><meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, shrink-to-fit=no"
+/><title>
+  【文章笔记】【模型融合】Merging Multi-Task Models via Weight-Ensembling Mixture of Experts | zengbiaojie & zhoujuan
+</title>
+<meta
+  name="description"
+  content="我们是人工智能领域大科学家！"
+/><script>
+  window.siteConfig = JSON.parse("{\"anchor_icon\":null,\"base\":\"https://zz.hanhan.live/\",\"clipboard\":{\"copyright\":{\"count\":50,\"enable\":false,\"license_type\":\"by-nc-sa\"},\"fail\":{\"en\":\"Copy failed (ﾟ⊿ﾟ)ﾂ\",\"ja\":\"コピー失敗 (ﾟ⊿ﾟ)ﾂ\",\"pt-br\":\"Falha ao copiar (ﾟ⊿ﾟ)ﾂ\",\"zh-cn\":\"复制失败 (ﾟ⊿ﾟ)ﾂ\",\"zh-tw\":\"複製失敗 (ﾟ⊿ﾟ)ﾂ\"},\"success\":{\"en\":\"Copy successfully (*^▽^*)\",\"ja\":\"コピー成功 (*^▽^*)\",\"pt-br\":\"Copiado com sucesso (*^▽^*)\",\"zh-cn\":\"复制成功 (*^▽^*)\",\"zh-tw\":\"複製成功 (*^▽^*)\"}},\"code_block\":{\"expand\":20},\"icon_font\":\"4552607_0khxww3tj3q9\",\"outdate\":{\"daysago\":180,\"enable\":false,\"message\":{\"en\":\"This article was last updated on {time}. Please note that the content may no longer be applicable.\",\"ja\":\"この記事は最終更新日：{time}。記載内容が現在有効でない可能性がありますのでご注意ください。\",\"pt-br\":\"Este artigo foi atualizado pela última vez em {time}. Observe que o conteúdo pode não ser mais aplicável.\",\"zh-cn\":\"本文最后更新于 {time}，请注意文中内容可能已不适用。\",\"zh-tw\":\"本文最後更新於 {time}，請注意文中內容可能已不適用。\"}}}");
+  
+</script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="preload"
+  as="style"
+  href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7cNoto%20Serif%20SC:400,400italic,700,700italic%7c&amp;display=swap"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7cNoto%20Serif%20SC:400,400italic,700,700italic%7c&amp;display=swap"
+  media="print"
+  onload="this.media='all'"
+/>
+<link
+    rel="preload"
+    href="//at.alicdn.com/t/c/font_4552607_0khxww3tj3q9.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin="anonymous"
+  /><link rel="stylesheet" href="/css/loader.min.ac746e154f756f8220326eeb52a719f142ab038be5a8ddf30ea5ef15ef2356ea.css" />
+<meta property="og:type" content="website" />
+  <meta property="og:title" content="【文章笔记】【模型融合】Merging Multi-Task Models via Weight-Ensembling Mixture of Experts | zengbiaojie & zhoujuan" />
+  <meta
+    property="og:description"
+    content="我们是人工智能领域大科学家！"
+  />
+  <meta property="og:url" content="https://zz.hanhan.live/post/merging-multi-task-models-via-weight-ensembling-mixture-of-experts/" />
+  <meta
+    property="og:site_name"
+    content="小 z 的金屋"
+  />
+  <meta
+    property="og:image"
+    content="/"
+  />
+  <meta property="article:author" content="zengbiaojie & zhoujuan" />
+  <meta property="article:published_time" content="2025-08-04T15:03:52&#43;08:00" />
+  <meta property="article:modified_time" content="2025-08-04T15:03:52&#43;08:00" /><meta property="article:tag" content="模型融合" /><meta name="twitter:card" content="summary" />
+  <meta name="twitter:image" content="/" />
+<link rel="shortcut icon" href="/favicon.ico"><link rel="stylesheet" href="/css/main.min.6b3f96d0d04f98678149e3cf7e64b2c567b840637aada3b4698b20028152a942.css" />
+<link
+    rel="preload"
+    as="style"
+    href="https://npm.webcache.cn/photoswipe@5.4.4/dist/photoswipe.css"
+    integrity="sha384-IfxC36XL/toUyJ939C73PcgMuRzAZuIzZxE38drsmO5p6jD7ei&#43;Zx/1oA/0l8ysE" crossorigin="anonymous"onload="this.onload=null;this.rel='stylesheet'"
+  /><link
+    rel="preload"
+    as="style"
+    href="https://npm.webcache.cn/katex@0.16.22/dist/katex.min.css"
+    integrity="sha384-5TcZemv2l/9On385z///&#43;d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP" crossorigin="anonymous"onload="this.onload=null;this.rel='stylesheet'"
+  /><script
+    src="https://npm.webcache.cn/pace-js@1.2.4/pace.min.js"
+    integrity="sha384-k6YtvFUEIuEFBdrLKJ3YAUbBki333tj1CSUisai5Cswsg9wcLNaPzsTHDswp4Az8" crossorigin="anonymous"></script><link
+    rel="stylesheet"
+    href="https://npm.webcache.cn/@reimujs/aos@0.1.2/dist/aos.css"
+    integrity="sha384-GMRP93c6Hkz9JVKGAuRR3nTS7M07RwPgTFenXiosjq2VbVgvdDNcz1g6Mkj8AONa" crossorigin="anonymous"/></head>
+  <body><div id='loader'>
+    <div class="loading-left-bg loading-bg"></div>
+    <div class="loading-right-bg loading-bg"></div>
+    <div class="spinner-box">
+      <div class="loading-taichi rotate"><svg width="150" height="150" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="https://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
+            <path d="M303.5 432A80 80 0 0 1 291.5 592A80 80 0 0 1 303.5 432z" fill="var(--red-1, #ff5252)" />
+            <path d="M512 65A447 447 0 0 1 512 959L512 929A417 417 0 0 0 512 95A417 417 0 0 0 512 929L512 959A447 447 0 0 1 512 65z 
+          M512 95A417 417 0 0 1 929 512A208.5 208.5 0 0 1 720.5 720.5L720.5 592A80 80 0 0 0 720.5 432A80 80 0 0 0 720.5 592L720.5 720.5A208.5 208.5 0 0 1 512 512A208.5 208.5 0 0 0 303.5 303.5A208.5 208.5 0 0 0 95 512A417 417 0 0 1 512 95z" fill="var(--red-1, #ff5252)" />
+          </svg></div><div class="loading-word">新建了别催了...</div>
+    </div>
+  </div>
+  </div>
+  <script>
+    var time = null;
+    var startLoading = () => {
+      time = Date.now();
+      document.getElementById('loader').classList.remove("loading");
+    }
+    var endLoading = () => {
+      if (!time) {
+        document.body.style.overflow = 'auto';
+        document.getElementById('loader').classList.add("loading");
+      } else {
+        if (Date.now() - time > 500) {
+          time = null;
+          document.body.style.overflow = 'auto';
+          document.getElementById('loader').classList.add("loading");
+        } else {
+          setTimeout(endLoading, 500 - (Date.now() - time));
+          time = null;
+        }
+      }
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+    document.getElementById('loader').addEventListener('click', endLoading);
+  </script><div id="copy-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+</div>
+<div id="lang-tooltip" style="pointer-events: none; opacity: 0; transition: all 0.2s ease; position: fixed;top: 50%;left: 50%;z-index: 999;transform: translate(-50%, -50%);color: white;background: rgba(0, 0, 0, 0.5);padding: 10px 15px;border-radius: 10px;">
+本文章没有找到对应的语言版本
+</div>
+<div id="heatmap-tooltip"></div><div id="container">
+      <div id="wrap"><div id="header-nav">
+  <nav id="main-nav"><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/">首页</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/archives">归档</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/about">经历</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/plan">计划</a>
+      </span><span class="main-nav-link-wrap">
+        <div class='main-nav-icon icon rotate'>&#xe62b;</div>
+        <a class="main-nav-link" href="/friend">友链</a>
+      </span><a id="main-nav-toggle" class="nav-icon"></a>
+  </nav>
+  <nav id="sub-nav"></nav></div>
+<header id="header"><picture></picture><img crossorigin="anonymous" fetchpriority="high" src="/images/banner.png" alt="【文章笔记】【模型融合】Merging Multi-Task Models via Weight-Ensembling Mixture of Experts"><div id="header-outer">
+    <div id="header-title"><a href="/" id="logo">
+            <h1 data-aos="slide-up">【文章笔记】【模型融合】Merging Multi-Task Models via Weight-Ensembling Mixture of Experts</h1>
+          </a><h2 id="subtitle-wrap" data-aos="slide-down"></h2></div>
+  </div>
+</header><div id="content"
+          
+          class="sidebar-right"  ><aside id="sidebar"><div class="sidebar-wrapper wrap-sticky">
+    <div
+      class="sidebar-wrap"
+      data-aos="fade-up"
+    ><div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1文章内容总结">1.文章内容总结</a>
+      <ul>
+        <li><a href="#11-背景和挑战">1.1 背景和挑战</a></li>
+        <li><a href="#12-wemoe主要思想">1.2 WEMoE主要思想</a></li>
+        <li><a href="#13-文章工作及横向对比">1.3 文章工作及横向对比</a></li>
+        <li><a href="#14-总结">1.4 总结</a></li>
+        <li><a href="#15-问题与思考">1.5 问题与思考</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-基础知识">2. 基础知识</a>
+      <ul>
+        <li><a href="#21-mlp">2.1 MLP</a></li>
+        <li><a href="#22-对预训练模型上分别对不同任务进行微调得到一系列微调好的模型">2.2 对预训练模型上分别对不同任务进行微调得到一系列微调好的模型</a></li>
+        <li><a href="#23-pareto前沿">2.3 Pareto前沿</a></li>
+        <li><a href="#24">2.4 </a></li>
+        <li><a href="#25-auxiliary-task">2.5 auxiliary task</a></li>
+        <li><a href="#26-domain-gap">2.6 domain gap</a></li>
+        <li><a href="#27-dictionary-learning">2.7 dictionary learning</a></li>
+        <li><a href="#28-relu">2.8 ReLU</a></li>
+        <li><a href="#29-top-1-accuracy">2.9 top-1 accuracy</a></li>
+        <li><a href="#210-mlp">2.10 MLP</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div></div>
+          <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img
+    data-src="/avatar/avatar.jpg"
+    data-sizes="auto"
+    alt="zengbiaojie &amp; zhoujuan"
+    class="lazyload"
+  />
+  <div class="sidebar-author-name">zengbiaojie &amp; zhoujuan</div>
+  <div class="sidebar-description">我们是人工智能领域大科学家！</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div><div class="sidebar-state-number">8</div>
+  </div>
+  <a class="sidebar-state-category" href="/categories/" aria-label="sidebar-state-category-link">
+    <div>分类</div>
+    <div class="sidebar-state-number">
+      3
+    </div>
+  </a>
+  <a class="sidebar-state-tag" href="/tags/" aria-label="sidebar-state-tag-link">
+    <div>标签</div>
+    <div class="sidebar-state-number">12</div>
+  </a>
+</div>
+<div class="sidebar-social"></div>
+<div class="sidebar-menu"><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/"
+        aria-label="首页"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">首页</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/archives"
+        aria-label="归档"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">归档</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/about"
+        aria-label="经历"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">经历</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/plan"
+        aria-label="计划"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">计划</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/friend"
+        aria-label="友链"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">友链</div>
+    </div></div>
+</div><div class="sidebar-btn-wrapper" style="position:static">
+            <div class="sidebar-toc-btn current"></div>
+            <div class="sidebar-common-btn"></div>
+          </div></div>
+  </div>
+
+  <div class="sidebar-widget"></div></aside>
+<section id="main"><article
+  class="h-entry article"
+  itemprop="blogPost"
+  itemscope
+  itemtype="https://schema.org/BlogPosting"
+>
+  <div
+    class="article-inner"
+    data-aos="fade-up"
+  >
+    <div class="article-meta"><div class="article-date">
+  <span
+    class="article-date-link"
+    data-aos="zoom-in"
+  >
+    <time datetime="2025-08-04 15:03:52 &#43;0800 CST" itemprop="datePublished"
+      >2025-08-04</time
+    >
+    <time style="display: none;" id="post-update-time"
+      >2025-08-04</time
+    >
+  </span>
+</div>
+<div class="article-category"><a
+      class="article-category-link"
+      href="/categories/%e6%96%87%e7%ab%a0%e9%98%85%e8%af%bb"
+      data-aos="zoom-in"
+      >文章阅读</a
+    ></div>
+</div>
+    <div class="hr-line"></div><div class="e-content article-entry" itemprop="articleBody"><p><a href="https://arxiv.org/abs/2402.00433v2">Merging Multi-Task Models via Weight-Ensembling Mixture of Experts</a></p>
+<h2 id="1文章内容总结">
+<a class="header-anchor" href="#1%e6%96%87%e7%ab%a0%e5%86%85%e5%ae%b9%e6%80%bb%e7%bb%93"></a>
+1.文章内容总结
+</h2><h3 id="11-背景和挑战">
+<a class="header-anchor" href="#11-%e8%83%8c%e6%99%af%e5%92%8c%e6%8c%91%e6%88%98"></a>
+1.1 背景和挑战
+</h3><p><strong>背景</strong>：深度学习的快速发展推进了向微调大型预训练模型转变用于下游任务，而非从头开始训练。初始在大规模数据集上训练过后，预训练模型具备了出色的常识，并能熟练识别和处理大型数据模式。这些模型在下游任务上微调后能获取特定任务的知识。在这种情况下，将多个特定任务的模型merge成一个统一的模型成为了知识转移和多任务学习的有效、可扩展的策略。</p>
+<p><strong>动机和挑战</strong>：现有的方法主要目的是在原始参数空间中找到一种稳定的多任务最优解决方案。这些方法都没有引进任何新参数，因此都维持了初始的推理成本。然而，<strong>随着特定任务的最优解决方案的变化，这种方法对每个实例的独特要求的适应性施加了限制(挑战1）</strong>。<strong>另一个重要的挑战是减轻不同模型参数之间的冲突，这会大大恶化平均性能（挑战2）</strong>。<strong>现有的方法尽管在某些场景下有效，但可能不能灵活处理多任务学习的动态性质，最优解决方案可能会因为输入而变化（挑战3）</strong>。</p>
+<p>为了解决这些挑战，paper提出了一种新的方法来合并视觉Transformers（ViTs），即：<strong>WEMoE</strong>，这个模块可以基于输入样例动态整合共享知识和特定任务知识，因此可以更灵活的适应每个实例的特定需求。</p>
+<h3 id="12-wemoe主要思想">
+<a class="header-anchor" href="#12-wemoe%e4%b8%bb%e8%a6%81%e6%80%9d%e6%83%b3"></a>
+1.2 WEMoE主要思想
+</h3><p>通过识别和分离共享知识和特定任务知识然后动态整合他们可以大大缓解参数冲突问题，利用对所有任务有利的共享知识，同时考虑特定的要求。通过基于特定输入数据动态结合这两种类型的知识，可以创建出一种更灵活更有适应性的模型，这样可以有效的处理更广泛的任务。</p>
+<h3 id="13-文章工作及横向对比">
+<a class="header-anchor" href="#13-%e6%96%87%e7%ab%a0%e5%b7%a5%e4%bd%9c%e5%8f%8a%e6%a8%aa%e5%90%91%e5%af%b9%e6%af%94"></a>
+1.3 文章工作及横向对比
+</h3><h4 id="131-文章工作">
+<a class="header-anchor" href="#131-%e6%96%87%e7%ab%a0%e5%b7%a5%e4%bd%9c"></a>
+1.3.1 文章工作
+</h4><p><strong>主要贡献</strong>：提出了一个新的分离共享知识和特定任务知识的框架，设计了一个新的权重集成的混合专家模型（WEMoE），它可以基于输入样例动态整合共享知识和特定任务知识。</p>
+<p><strong>框架概览</strong>：如图：</p>
+<p><img src="/post/merging-multi-task-models-via-weight-ensembling-mixture-of-experts/cf467165-bc15-450e-be11-1167cb159be1.png" alt="cf467165-bc15-450e-be11-1167cb159be1"></p>
+<p>文章设计的这个框架是在有T个Transformer模块的情况下，再加一个模块，其中原先的MLPs被升级成了WEMoE模块；WEMoE的框架在上图b中，输入数据输送到Router后Router会根据输入去选择出对应的task vectors（task vector是通过微调模型权重减去预训练模型权重得到），然后根据公式$ \theta=\theta_0+\lambda \sum_i\tau_i $将task vectors和共享参数$\theta_0$进行计算得到$\theta^{MLP}$。（其中$\lambda$ 在这篇文章里等于0.3）</p>
+<p><strong>WEMoE的数学表示</strong>：</p>
+$$
+\begin{equation}
+\left\{
+\begin{aligned}
+&w=mean(r(h_{1:N}^{in}))\in\mathbb R^{T\times1},\\
+&\theta^{MLP}=\theta_0^{MLP}+D_\tau w,\\
+&h_{1:N}^{out}=f_{MLP}(h_{1:N}^{in};\theta^{MLP}).
+\end{aligned}
+\right.
+\end{equation}
+$$<p>$h_{1:N}^{in}$是token的输入序列，$h_{1:N}^{out}$是token的输出序列，$f_{MLP}$是MLP函数，$D_\tau\in \mathbb R^{|\theta^{MLP}|\times T}$（<code>&lt;font color=&quot;red&quot;&gt;</code>怀疑这里的维度应该是写成$\theta_0^{MLP}\times T$，虽然$\theta$和$\theta_0$维度都一样，但是我认为这里应该协会写成$\theta_0$而不是用该算式得到的结果参数的维度作为维度<code>&lt;/font&gt;</code>）一个任务向量的字典矩阵，维度为$\theta_0^{MLP}$的维度*任务向量的个数$T$（所以$w$肯定是要进行维度转换才能和$D_\tau$做矩阵乘法，至于他是在route里用$W2\ or\ W_1$去做的转换还是专门在路由选择结束后专门做的转换估计要看代码才知道）；$f_{MLP}$其实就是MLP函数，就是$f(Wx+b)$的一个变换，然后$f()$选择什么激活函数要看下代码才知道。</p>
+<p>$r()$是路由的数学表达式，具体如下（分成0层隐藏层和2层隐藏层情况）：</p>
+$$
+\begin{equation}
+r(h)=W_2ReLU(W_1h+b_1)+b_2,\ l=2,
+\end{equation}
+$$$$
+\begin{equation}
+r(h)=b_0,\ l=0
+\end{equation}
+$$<p>$W_1$和$W_2$的初始值通过从均值为0、方差为0.01的高斯分布中采样而得，$l=0$时$b_0$为$\lambda$，$b_1$和$b_2$分别为0和$\lambda$。</p>
+<h4 id="132-方法对比">
+<a class="header-anchor" href="#132-%e6%96%b9%e6%b3%95%e5%af%b9%e6%af%94"></a>
+1.3.2 方法对比
+</h4><p><strong>重新审视模型merge</strong>：从多目标优化的角度来看，最优merge模型的解空间是$S$中下游任务的<strong>Pareto前沿</strong>。文章认为merge多个模型的时候也类似有多个目标，可以用多目标优化的思想去考虑merge模型，使得merge的模型性能综合达到最优。随着解空间越来越大、越来越复杂，找到最优merge模型是很有挑战性的。此外，我们无法获得下游任务的训练数据，只有预训练模型和微调好的模型，这使得我们无法像传统的多任务学习环境一样从头开始训练一个模型。因此，我们需要找到一种方式，将预训练模型和微调模型的知识转移到一个统一的merge模型中。</p>
+<p>此外，文章用了损失地貌的图来对比解释Pareto最优，没有静态解$\theta^\prime$能同时最小化所有任务的损失好过$arg\ min_\theta\ \mathcal L_1(\theta)+\mathcal L_2(\theta)$：</p>
+<p><img src="/post/merging-multi-task-models-via-weight-ensembling-mixture-of-experts/eb5b5a8e-00cc-4d86-927b-d20d1ab202b4.png" alt="eb5b5a8e-00cc-4d86-927b-d20d1ab202b4"></p>
+<h5 id="1321-实验数据平均性能对比">
+<a class="header-anchor" href="#1321-%e5%ae%9e%e9%aa%8c%e6%95%b0%e6%8d%ae%e5%b9%b3%e5%9d%87%e6%80%a7%e8%83%bd%e5%af%b9%e6%af%94"></a>
+1.3.2.1 实验数据平均性能对比
+</h5><p>WEMoE的平均性能超过传统的MTL基线0.5%和0.1%（即$Tab.2$和$Tab.3$的结论，$Tab.2$中WEMoE平均准确率是89.4%，比TRADITIONAL MTL88.9%高0.5%，$Tab.3$中WEMoE是93.6%，比TRADITIONAL MTL93.5%高0.1%），表中可以看出比起其他merge方法平均性能也更好。</p>
+<p><img src="/post/merging-multi-task-models-via-weight-ensembling-mixture-of-experts/3d778b84-9a98-4b2e-9d8b-9a2baf1facaa.png" alt="3d778b84-9a98-4b2e-9d8b-9a2baf1facaa"></p>
+<p><strong>Tab.2</strong>:在8个任务上merge CLIP-ViT-B/32模型时的多任务性能。</p>
+<p><img src="/post/merging-multi-task-models-via-weight-ensembling-mixture-of-experts/8d1b5615-a7c0-4f10-8659-e730b9cd6290.png" alt="8d1b5615-a7c0-4f10-8659-e730b9cd6290"></p>
+<p><strong>Tab.3</strong>：在8个任务上merge CLIP-ViT-L/14模型时的多任务性能。</p>
+<h5 id="1322-收敛性和灵敏度对比">
+<a class="header-anchor" href="#1322-%e6%94%b6%e6%95%9b%e6%80%a7%e5%92%8c%e7%81%b5%e6%95%8f%e5%ba%a6%e5%af%b9%e6%af%94"></a>
+1.3.2.2 收敛性和灵敏度对比
+</h5><p>如图所示，$Fig.4$展示了不同步数的merge后的WEMoE的性能。在$Fig.4(a)$中，这篇文章merge了用不同学习率配置的CLIP-ViT-B/32模型。可以观察到，随着训练步数的增加merge模型的性能呈现上升趋势，且收敛的很快，在仅仅200轮就达到了一个很高的准确率。此外，不同学习率的影响并不显著，说明文章提出的方法对学习率参数并不敏感。这是一个好的性质，因为它降低了对超参调整的需求。</p>
+<p><img src="/post/merging-multi-task-models-via-weight-ensembling-mixture-of-experts/3f50b65c-3e8a-40e2-971a-85cc940097d9.png" alt="3f50b65c-3e8a-40e2-971a-85cc940097d9"></p>
+<p><strong>Fig.4</strong>:不同步数的merge模型的性能。</p>
+<p><strong>(a)</strong>：不同学习率的CLIP-ViT-B/32模型</p>
+<p><strong>(b)</strong>:CLIP-ViT-B/32和CLIP-ViT-L/14的比较</p>
+<h5 id="1323-扩大规模策略的消融实验">
+<a class="header-anchor" href="#1323-%e6%89%a9%e5%a4%a7%e8%a7%84%e6%a8%a1%e7%ad%96%e7%95%a5%e7%9a%84%e6%b6%88%e8%9e%8d%e5%ae%9e%e9%aa%8c"></a>
+1.3.2.3 扩大规模策略的消融实验
+</h5><p>为了深入调查扩大规模策略的影响，文章在CLIP-ViT-B/32上做了实验，对比了三种不同的扩大规模策略：（1）整个Transformer块：扩大规模的MoE被应用在整个Transformer块。（2）Attention+MLP：扩大规模的MoE被分别应用在attention权重上和MLP权重。（3）仅MLP：扩大规模的MoE仅用在MLP权重上，即这篇文章提出的最终框架，见上图概览。这三种的实验比较结果如下表所示：</p>
+<p><img src="#ZgotmplZ" alt="4d3b3224-b354-42b8-b00a-5d702f6d949b"></p>
+<p>可以看到，当注意力和MLP权重分别增加时，大多数任务的性能都得到了显著提高，超过了其他两种方法，但是如果路由网络同时应用于MLPs和attention权重，则会导致计算负载和内存使用量增加，边际性能增益可能无法保证成本，所以文章最后选择了只将扩大规模的MoE应用在MLP权重上。</p>
+<h5 id="1324-泛化能力和鲁棒性评估">
+<a class="header-anchor" href="#1324-%e6%b3%9b%e5%8c%96%e8%83%bd%e5%8a%9b%e5%92%8c%e9%b2%81%e6%a3%92%e6%80%a7%e8%af%84%e4%bc%b0"></a>
+1.3.2.4 泛化能力和鲁棒性评估
+</h5><p><strong>泛化能力评估</strong>：文章实验从八个下游任务中选择了两个任务作为看不见的任务，在剩余的六个任务上使用了微调后的模型进行merge，构建了一个六任务模型。然后将这个六任务模型应用于看不见的任务，以评估模型的泛化能力。文章在0层路由和2层路由上都做了实验，结果如下表所示：</p>
+<p><img src="/post/merging-multi-task-models-via-weight-ensembling-mixture-of-experts/9c04f505-faba-4a49-94ab-0d655eb5edaf.png" alt="9c04f505-faba-4a49-94ab-0d655eb5edaf"></p>
+<p><strong>鲁棒性评估</strong>：文章实验利用（<a href="https://arxiv.org/abs/1903.12261">Hendrycks&amp;Dietterich，2019</a>）中建议的方法从干净的测试集中生成失真的图像，选择了七种类型的失真，实验结果如下：</p>
+<p><img src="/post/merging-multi-task-models-via-weight-ensembling-mixture-of-experts/40c092bc-7661-4cf2-869c-d55e49e6f194.png" alt="40c092bc-7661-4cf2-869c-d55e49e6f194"></p>
+<p>实验结果表明，在各种方法中，WEMoE（$l=2$）在干净的测试集和大多数失真的测试集上始终达到最高性能。这表明文章提出的方法在处理干净和失真的数据方面都是有效的。然而，在图像质量显著下降的情况下，如pixelate像素化，WEMoE（$l=2$）可能会过拟合某些特定任务，导致性能下降。 相比之下，WEMoE（$l=0$）在这种条件下往往表现出更稳定的性能。这归因于其较低的参数数量，使其不易过拟合。</p>
+<p>观察下图，可以发现merge模型的性能相对于任务向量的缩放系数$\lambda$相对稳定，这表明文章提出的方法对任务向量的缩放系数$\lambda$也更具鲁棒性。</p>
+<p><img src="/post/merging-multi-task-models-via-weight-ensembling-mixture-of-experts/90c97228-ff94-4cc4-8361-00de0defc5ad.png" alt="90c97228-ff94-4cc4-8361-00de0defc5ad"></p>
+<h3 id="14-总结">
+<a class="header-anchor" href="#14-%e6%80%bb%e7%bb%93"></a>
+1.4 总结
+</h3><p>文章提出了一种新的方法来merge来自不同任务的基于Transformer的视觉模型，且文章提出的方法在从各种特定任务的微调模型中转移知识并构建统一的多任务模型方面是有效的；提出了一种新的WEMoE模块，该模块可以根据输入样本动态集成共享和特定任务的知识；进行了广泛的实验，实验结果证明了方法的有效性。</p>
+<h3 id="15-问题与思考">
+<a class="header-anchor" href="#15-%e9%97%ae%e9%a2%98%e4%b8%8e%e6%80%9d%e8%80%83"></a>
+1.5 问题与思考
+</h3><h4 id="151-他的模型外推怎么做的为什么能提升泛化能力">
+<a class="header-anchor" href="#151-%e4%bb%96%e7%9a%84%e6%a8%a1%e5%9e%8b%e5%a4%96%e6%8e%a8%e6%80%8e%e4%b9%88%e5%81%9a%e7%9a%84%e4%b8%ba%e4%bb%80%e4%b9%88%e8%83%bd%e6%8f%90%e5%8d%87%e6%b3%9b%e5%8c%96%e8%83%bd%e5%8a%9b"></a>
+1.5.1 他的模型外推怎么做的，为什么能提升泛化能力？
+</h4><p><strong>猜测</strong>：</p>
+<p>架构图中的Router可单选可多选，如果input是$\tau_1$的，Router准确的话应该只会选择$\tau_1$，此时$\theta=\theta_0+\lambda\tau_1$，这样就保证了在单个任务上的损失很小，然后对于没见过的任务猜测是follow的task arithmetic那篇的任务类比，应该是利用任务类比的思想将几个task vector进行组合来提高在另一个task上的性能，导致了他这个模型可以做到模型外推提高泛化能力，究竟是不是利用task vector进行组合做模型外推也要看下他代码咋写的。</p>
+<h4 id="152-他的消融实验怎么做的">
+<a class="header-anchor" href="#152-%e4%bb%96%e7%9a%84%e6%b6%88%e8%9e%8d%e5%ae%9e%e9%aa%8c%e6%80%8e%e4%b9%88%e5%81%9a%e7%9a%84"></a>
+1.5.2 他的消融实验怎么做的？
+</h4><p><img src="/post/merging-multi-task-models-via-weight-ensembling-mixture-of-experts/a6251055-5071-407c-963b-570a39e11762.png" alt="a6251055-5071-407c-963b-570a39e11762"></p>
+<p>主要是做了三种方案的比较，最后综合选择了只替换MLP的方案，因为如果路由网络同时应用于MLPs和attention权重，则会导致计算负载和内存使用量增加，边际性能增益可能无法保证成本，所以综合考虑用了只替换MLP的方案。</p>
+<h4 id="153-这篇工作解决了什么问题怎么解决的如何讲story怎么通过实验论证的">
+<a class="header-anchor" href="#153-%e8%bf%99%e7%af%87%e5%b7%a5%e4%bd%9c%e8%a7%a3%e5%86%b3%e4%ba%86%e4%bb%80%e4%b9%88%e9%97%ae%e9%a2%98%e6%80%8e%e4%b9%88%e8%a7%a3%e5%86%b3%e7%9a%84%e5%a6%82%e4%bd%95%e8%ae%b2story%e6%80%8e%e4%b9%88%e9%80%9a%e8%bf%87%e5%ae%9e%e9%aa%8c%e8%ae%ba%e8%af%81%e7%9a%84"></a>
+1.5.3 这篇工作解决了什么问题？怎么解决的？如何讲story？怎么通过实验论证的？
+</h4><p><strong>解决的问题</strong>：提供了一种更灵活的方案可以适应每个实例的特定需求。</p>
+<p><strong>解决方案</strong>：提出了WEMoE来进行解决。</p>
+<p><strong>如何讲story</strong>：先讲当前现有merge方法不够灵活，最优解决方案可能会因为输入而变化，然后提出自己的方案说自己的方案更能灵活处理，然后做实验比较SOTA和自己的方法的性能，再比较模型的泛化能力和鲁棒性。</p>
+<h4 id="154-我认为这篇工作还存在什么不足">
+<a class="header-anchor" href="#154-%e6%88%91%e8%ae%a4%e4%b8%ba%e8%bf%99%e7%af%87%e5%b7%a5%e4%bd%9c%e8%bf%98%e5%ad%98%e5%9c%a8%e4%bb%80%e4%b9%88%e4%b8%8d%e8%b6%b3"></a>
+1.5.4 我认为这篇工作还存在什么不足？
+</h4><p>暂时没想到，非要说不足我觉得那个数学表达式可以参照AdaMerging的思想对不同的任务向量给予不同的权重值$\lambda_i$，就是变成$\theta^{MLP}=\theta_0^{MLP}+\sum \lambda_i \tau_i$这种形式，这样就是对于在看不见的任务上可以用现有的几种任务的task vector给他们不同的权重去进行组合，感觉会更加灵活，泛化能力会更好。</p>
+<h2 id="2-基础知识">
+<a class="header-anchor" href="#2-%e5%9f%ba%e7%a1%80%e7%9f%a5%e8%af%86"></a>
+2. 基础知识
+</h2><h3 id="21-mlp">
+<a class="header-anchor" href="#21-mlp"></a>
+2.1 MLP
+</h3><p>MLP（Multilayer Perceptron，多层感知机）是一种经典的神经网络架构，广泛应用于各种机器学习任务，如分类、回归和特征学习。</p>
+<h3 id="22-对预训练模型上分别对不同任务进行微调得到一系列微调好的模型">
+<a class="header-anchor" href="#22-%e5%af%b9%e9%a2%84%e8%ae%ad%e7%bb%83%e6%a8%a1%e5%9e%8b%e4%b8%8a%e5%88%86%e5%88%ab%e5%af%b9%e4%b8%8d%e5%90%8c%e4%bb%bb%e5%8a%a1%e8%bf%9b%e8%a1%8c%e5%be%ae%e8%b0%83%e5%be%97%e5%88%b0%e4%b8%80%e7%b3%bb%e5%88%97%e5%be%ae%e8%b0%83%e5%a5%bd%e7%9a%84%e6%a8%a1%e5%9e%8b"></a>
+2.2 对预训练模型上分别对不同任务进行微调得到一系列微调好的模型
+</h3><p>第2页原文：</p>
+<blockquote>
+<p>we finetune the pre-trained model f individually for each task si, resulting in a series of fine-tuned models</p></blockquote>
+<p>对同一个预训练模型对不同任务微调有两种结果：</p>
+<ol>
+<li>如果是将不同任务的数据综合在一起给预训练模型进行微调得到的就是综合这些任务能力的一个微调模型。</li>
+<li>如果是将不同任务的数据分别进行微调得到的就是一系列对应不同任务能力的微调模型。例如对QWen的一个预训练模型对不同任务进行微调会得到Code能力的微调模型、math能力的微调模型等。</li>
+</ol>
+<h3 id="23-pareto前沿">
+<a class="header-anchor" href="#23-pareto%e5%89%8d%e6%b2%bf"></a>
+2.3 Pareto前沿
+</h3><p>Pareto前沿（Pareto Front）是多目标优化问题中的一个重要概念，用于描述在多个目标之间无法进一步改进的最优解集合。在许多实际问题中，我们通常需要同时优化多个目标，而这些目标之间往往是相互冲突的。这些目标之间很难同时达到最优，因此需要找到一种平衡。在多目标优化问题中，一个解被称为<strong>Pareto最优解</strong>（Pareto Optimal Solution），如果不存在另一个解能够在不恶化至少一个目标的情况下改善至少一个目标。换句话说，Pareto最优解是无法在不牺牲其他目标的情况下进一步改进的解。Pareto前沿（Pareto Front）是所有Pareto最优解的集合。它是一个高维空间中的边界，表示在多个目标之间达到最佳平衡的解。</p>
+<h3 id="24">
+<a class="header-anchor" href="#24"></a>
+2.4 $arg \min_\theta\sum_{i=1}^n\mathcal L_i(\theta)$
+</h3><p>调整参数$\theta$使得损失函数的加和最小。</p>
+<h3 id="25-auxiliary-task">
+<a class="header-anchor" href="#25-auxiliary-task"></a>
+2.5 auxiliary task
+</h3><p><strong>辅助任务（auxiliary task）</strong> 是指在训练过程中，为了帮助模型更好地学习而引入的额外任务。这些任务通常与主要任务相关，但不是最终目标。辅助任务可以帮助模型学习更有用的特征表示，从而提高模型在主要任务上的性能。</p>
+<p><strong>目标任务（target task）</strong> 是模型最终需要解决的任务，也是评估模型性能的主要标准。这是模型的主要目标，通常是我们最关心的任务。</p>
+<p><strong>控制任务（control task）</strong> 是指用于评估模型性能的辅助任务，通常用于验证模型在不同条件下的泛化能力。控制任务可以帮助我们更好地理解模型的行为，特别是在目标任务数据有限或不完整的情况下。</p>
+<h3 id="26-domain-gap">
+<a class="header-anchor" href="#26-domain-gap"></a>
+2.6 domain gap
+</h3><p>图像及点云的标注的一件非常耗时、无聊、繁琐的事情。人工标注的成本高、耗时长，因此人们会用计算机合成的图像数据集进行语义分割模型的训练。合成的数据集称为 source domain（源域），真实世界的数据集称为target domain（目标域）。</p>
+<p>通常我们会使用源域中的数据进行训练模型，然后将在目标域进行分割预测时往往会产生很多错误的标签，称为伪标签噪声。</p>
+<p>由于不同的数据集之间的目标分布不同，即源域和目标域之间存在域差距——Domain Gap 导致这种现象产生。</p>
+<h3 id="27-dictionary-learning">
+<a class="header-anchor" href="#27-dictionary-learning"></a>
+2.7 dictionary learning
+</h3><p>Dictionary Learning（字典学习）是一种无监督学习方法，主要用于从数据中学习一组称为“字典”的基向量（或原子），并用这些基向量的线性组合来表示数据。它在信号处理、图像处理、机器学习和数据压缩等领域有广泛应用。</p>
+<h3 id="28-relu">
+<a class="header-anchor" href="#28-relu"></a>
+2.8 ReLU
+</h3><p>激活函数是指在多层神经网络中，上层神经元的输出和下层神经元的输入存在一个函数关系，这个函数就是激活函数。如下图所示，上层神经元通过加权求和，得到输出值，然后被作用一个激活函数，得到下一层的输入值。引入激活函数的目的是为了增加神经网络的非线性拟合能力。</p>
+<p>ReLu，全称是Rectified Linear Unit，中文名称是线性整流函数，是在神经网络中常用的激活函数。通常意义下，其指代数学中的斜坡函数，即 <img src="https://www.zhihu.com/equation?tex=f%28X%29%3Dmax%280%2C&#43;X%29&amp;consumer=ZHI_MENG" alt="f(X)=max(0, X)"> 。其对应的函数图像如下所示：</p>
+<p><img src="/post/merging-multi-task-models-via-weight-ensembling-mixture-of-experts/f3c9f5e8-1a96-4809-a813-c62003b07b11.png" alt="f3c9f5e8-1a96-4809-a813-c62003b07b11"></p>
+<h3 id="29-top-1-accuracy">
+<a class="header-anchor" href="#29-top-1-accuracy"></a>
+2.9 top-1 accuracy
+</h3><p><strong>top-1</strong>：就是你预测的label取最后概率向量里面最大的那一个作为预测结果，如果你的预测结果中概率最大的那个分类正确，则预测正确。否则预测错误</p>
+<p><strong>top-5</strong>：就是最后概率向量最大的前五名中，只要出现了正确概率即为预测正确。否则预测错误。</p>
+<p>由此可以看出，top5一般比top1大。</p>
+<h3 id="210-mlp">
+<a class="header-anchor" href="#210-mlp"></a>
+2.10 MLP
+</h3><p>多层感知机，主要是利用隐藏层和激活函数来进行非线性变换（$Wx+b$）得到一个非线性模型，常用激活函数有Sigmoid，Tanh，ReLU，使用Softmax来处理多类分类，超参数为隐藏层数和隐藏层大小。</p>
+</div>
+    <footer class="article-footer"><blockquote class="article-copyright"><p><strong><span class="icon-user icon"></span>本文作者：</strong>zengbiaojie &amp; zhoujuan @ 小 z 的金屋</p><p>
+      <strong><span class="icon-link icon"></span>本文链接：</strong><a href="https://zz.hanhan.live/post/merging-multi-task-models-via-weight-ensembling-mixture-of-experts/">https://zz.hanhan.live/post/merging-multi-task-models-via-weight-ensembling-mixture-of-experts/</a>
+    </p><p><strong><span class="icon-pencil icon"></span>本文标题：</strong>【文章笔记】【模型融合】Merging Multi-Task Models via Weight-Ensembling Mixture of Experts</p><p><strong><span class="icon-calendar icon"></span>本文发布时间：</strong>2025-08-04 15:03:52</p><p>
+      
+      <strong><span class="icon-copyright icon"></span>本文版权：</strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener external nofollow noreferrer" target="_blank"><span class="icon-creative-commons"></span>BY-NC-SA</a> 许可协议。转载请注明出处！
+    </p>
+    <span class="icon-creative-commons article-copyright-bg"></span></blockquote>
+<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item" data-aos="zoom-in">
+      <a
+        class="article-tag-list-link"
+        href="/tags/%e6%a8%a1%e5%9e%8b%e8%9e%8d%e5%90%88"
+        rel="tag"
+        >模型融合</a
+      >
+    </li></ul>
+</footer>
+  </div><nav
+    id="article-nav"
+    data-aos="fade-up"
+  ><div class="article-nav-link-wrap article-nav-link-left"><img
+              data-src="/images/cha4.png"
+              data-sizes="auto"
+              alt="【文章笔记】【模型融合】Editing Models with Task Arithmetic"
+              class="lazyload"
+            /><a href="/post/taskarithmetic/"></a>
+        <div class="article-nav-caption">前一篇</div>
+        <h3 class="article-nav-title">【文章笔记】【模型融合】Editing Models with Task Arithmetic</h3>
+      </div><div class="article-nav-link-wrap article-nav-link-right"><img
+              data-src="/images/cha5.png"
+              data-sizes="auto"
+              alt="【书籍阅读】【模式识别与机器学习】贝叶斯学习基础"
+              class="lazyload"
+            /><a href="/post/pattern_recognize/"></a>
+        <div class="article-nav-caption">后一篇</div>
+        <h3 class="article-nav-title">【书籍阅读】【模式识别与机器学习】贝叶斯学习基础</h3>
+      </div></nav></article></section>
+        </div><footer id="footer">
+  <div style="width: 100%; overflow: hidden">
+    <div class="footer-line"></div>
+  </div>
+  <div id="footer-info"><div>
+      <span class="icon-copyright"></span>2020-2025<span class="footer-info-sep rotate"></span>
+      zengbiaojie &amp; zhoujuan
+    </div><div>
+        基于&nbsp;<a
+          href="https://gohugo.io/"
+          target="_blank"
+          >Hugo</a
+        >&nbsp; Theme.<a
+          href="https://github.com/D-Sketon/hugo-theme-reimu"
+          target="_blank"
+          >Reimu</a
+        >
+      </div><div>
+        <span class="icon-brush"
+          >&nbsp;24.9k</span
+        >
+        &nbsp;|&nbsp;
+        <span class="icon-coffee">&nbsp;00:52</span>
+      </div><div>
+        <span class="icon-eye"></span>
+        <span id="busuanzi_container_site_pv"
+          >总访问量&nbsp;<span
+            id="busuanzi_value_site_pv"
+          ></span
+        ></span>
+        &nbsp;|&nbsp;
+        <span class="icon-user"></span>
+        <span id="busuanzi_container_site_uv"
+          >总访客量&nbsp;<span
+            id="busuanzi_value_site_uv"
+          ></span
+        ></span>
+      </div></div>
+</footer>
+<div class="sidebar-top">
+            <div class="sidebar-top-taichi rotate"></div>
+            <div class="arrow-up"></div>
+          </div><div id="mask" class="hide"></div>
+      </div><nav id="mobile-nav">
+  <div class="sidebar-wrap"><div class="sidebar-toc-sidebar"><div class="sidebar-toc">
+  <h3 class="toc-title">文章目录</h3>
+  <div class="sidebar-toc-wrapper toc-div-class">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1文章内容总结">1.文章内容总结</a>
+      <ul>
+        <li><a href="#11-背景和挑战">1.1 背景和挑战</a></li>
+        <li><a href="#12-wemoe主要思想">1.2 WEMoE主要思想</a></li>
+        <li><a href="#13-文章工作及横向对比">1.3 文章工作及横向对比</a></li>
+        <li><a href="#14-总结">1.4 总结</a></li>
+        <li><a href="#15-问题与思考">1.5 问题与思考</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-基础知识">2. 基础知识</a>
+      <ul>
+        <li><a href="#21-mlp">2.1 MLP</a></li>
+        <li><a href="#22-对预训练模型上分别对不同任务进行微调得到一系列微调好的模型">2.2 对预训练模型上分别对不同任务进行微调得到一系列微调好的模型</a></li>
+        <li><a href="#23-pareto前沿">2.3 Pareto前沿</a></li>
+        <li><a href="#24">2.4 </a></li>
+        <li><a href="#25-auxiliary-task">2.5 auxiliary task</a></li>
+        <li><a href="#26-domain-gap">2.6 domain gap</a></li>
+        <li><a href="#27-dictionary-learning">2.7 dictionary learning</a></li>
+        <li><a href="#28-relu">2.8 ReLU</a></li>
+        <li><a href="#29-top-1-accuracy">2.9 top-1 accuracy</a></li>
+        <li><a href="#210-mlp">2.10 MLP</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div></div>
+        <div class="sidebar-common-sidebar hidden"><div class="sidebar-author">
+  <img
+    data-src="/avatar/avatar.jpg"
+    data-sizes="auto"
+    alt="zengbiaojie &amp; zhoujuan"
+    class="lazyload"
+  />
+  <div class="sidebar-author-name">zengbiaojie &amp; zhoujuan</div>
+  <div class="sidebar-description">我们是人工智能领域大科学家！</div>
+</div>
+<div class="sidebar-state">
+  <div class="sidebar-state-article">
+    <div>文章</div><div class="sidebar-state-number">8</div>
+  </div>
+  <a class="sidebar-state-category" href="/categories/" aria-label="sidebar-state-category-link">
+    <div>分类</div>
+    <div class="sidebar-state-number">
+      3
+    </div>
+  </a>
+  <a class="sidebar-state-tag" href="/tags/" aria-label="sidebar-state-tag-link">
+    <div>标签</div>
+    <div class="sidebar-state-number">12</div>
+  </a>
+</div>
+<div class="sidebar-social"></div>
+<div class="sidebar-menu"><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/"
+        aria-label="首页"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">首页</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/archives"
+        aria-label="归档"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">归档</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/about"
+        aria-label="经历"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">经历</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/plan"
+        aria-label="计划"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">计划</div>
+    </div><div class="sidebar-menu-link-wrap">
+      <a
+        class="sidebar-menu-link-dummy"
+        href="/friend"
+        aria-label="友链"
+      ></a>
+      <div class='sidebar-menu-icon icon rotate'>&#xe62b;</div>
+      <div class="sidebar-menu-link">友链</div>
+    </div></div>
+</div></div><div class="sidebar-btn-wrapper">
+        <div class="sidebar-toc-btn current"></div>
+        <div class="sidebar-common-btn"></div>
+      </div></nav>
+</div><script
+    src="https://npm.webcache.cn/lazysizes@5.3.2/lazysizes.min.js"
+    integrity="sha384-3gT/vsepWkfz/ff7PpWNUeMzeWoH3cDhm/A8jM7ouoAK0/fP/9bcHHR5kHq2nf&#43;e" crossorigin="anonymous"></script><script
+    src="https://npm.webcache.cn/clipboard@2.0.11/dist/clipboard.min.js"
+    integrity="sha384-J08i8An/QeARD9ExYpvphB8BsyOj3Gh2TSh1aLINKO3L0cMSH2dN3E22zFoXEi0Q" crossorigin="anonymous"></script><script
+    src="https://npm.webcache.cn/material-theme@1.0.0/dist/material-theme.umd.js"
+    integrity="sha384-vLev0II0HKFaxkcm&#43;/7kX5IGwVFBASkGchU311wmU/veIj2bB0UcBkQbW6yw2asK" crossorigin="anonymous"></script><script src="/js/main.js" integrity="" crossorigin="anonymous" ></script><script src="/js/aos.js" integrity="" crossorigin="anonymous" ></script><script>
+    var aosInit = () => {
+      AOS.init({
+        duration: 1000,
+        easing: "ease",
+        once: true,
+        offset: 50,
+      });
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", aosInit);
+    } else {
+      aosInit();
+    }
+  </script><script src="/js/pjax_main.js" integrity="" crossorigin="anonymous" data-pjax></script><script
+    src="https://npm.webcache.cn/mouse-firework@0.1.1/dist/index.umd.js"
+    integrity="sha384-8LyaidD9GPxQQgLJO/WRw/O2h3BoNq/ApI/ecpvM6RsrCz2qP2ppBXUKihP4V/2d" crossorigin="anonymous"></script><script>
+  if (window.firework) {
+    const options = JSON.parse("{\"excludeelements\":[\"a\",\"button\"],\"particles\":[{\"colors\":[\"var(--red-1)\",\"var(--red-2)\",\"var(--red-3)\",\"var(--red-4)\"],\"duration\":[1200,1800],\"easing\":\"easeOutExpo\",\"move\":[\"emit\"],\"number\":20,\"shape\":\"circle\",\"shapeOptions\":{\"alpha\":[0.3,0.5],\"radius\":[16,32]}},{\"colors\":[\"var(--red-0)\"],\"duration\":[1200,1800],\"easing\":\"easeOutExpo\",\"move\":[\"diffuse\"],\"number\":1,\"shape\":\"circle\",\"shapeOptions\":{\"alpha\":[0.2,0.5],\"lineWidth\":6,\"radius\":20}}]}");
+    options.excludeElements = options.excludeelements;
+    delete options.excludeelements;
+    window.firework(options);
+  }
+</script>
+
+<div id="lazy-script">
+  <div><script data-pjax>
+        window.REIMU_POST = {
+          author: "zengbiaojie \u0026 zhoujuan",
+          title: "【文章笔记】【模型融合】Merging Multi-Task Models via Weight-Ensembling Mixture of Experts",
+          url: "https:\/\/zz.hanhan.live\/post\/merging-multi-task-models-via-weight-ensembling-mixture-of-experts\/",
+          description: "Merging Multi-Task Models via Weight-Ensembling Mixture of Experts\n1.文章内容总结\r1.1 背景和挑战\r背景：深度学习的快速发展推进了向微调大型预训练模型转变用于下游任务，而非从头开始训练。初始在大规模数据集上训练过后，预训练模型具备了出色的常识，并能熟练识别和处理大型数据模式。这些模型在下游任务上微调后能获取特定任务的知识。在这种情况下，将多个特定任务的模型merge成一个统一的模型成为了知识转移和多任务学习的有效、可扩展的策略。\n",
+          cover: "https:\/\/zz.hanhan.live\/images\/banner.png",
+        };
+      </script><script src="/js/insert_highlight.js" integrity="" crossorigin="anonymous" data-pjax></script><script type="module" data-pjax>const PhotoSwipeLightbox = (await safeImport("https:\/\/npm.webcache.cn\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js", "sha384-DiL6M\/gG\u002bwmTxmCRZyD1zee6lIhawn5TGvED0FOh7fXcN9B0aZ9dexSF\/N6lrZi\/")).default;const pswp = () => {
+          if (_$$('.article-entry a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-entry',
+              children: 'a.article-gallery-item',pswpModule: () => safeImport("https:\/\/npm.webcache.cn\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8\u002boTJ7m3DfYEWX1fu1scuS4\u002bs")}).init();
+          }
+          if(_$$('.article-gallery a.article-gallery-item').length > 0) {
+            new PhotoSwipeLightbox({
+              gallery: '.article-gallery',
+              children: 'a.article-gallery-item',pswpModule: () => safeImport("https:\/\/npm.webcache.cn\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js", "sha384-WkkO3GCmgkC3VQWpaV8DqhKJqpzpF9JoByxDmnV8\u002boTJ7m3DfYEWX1fu1scuS4\u002bs")}).init();
+          }
+          window.lightboxStatus = 'done';
+          window.removeEventListener('lightbox:ready', pswp);
+        }
+        if(window.lightboxStatus === 'ready') {
+          pswp()
+        } else {
+          window.addEventListener('lightbox:ready', pswp);
+        }
+      </script><script
+    src="https://npm.webcache.cn/katex@0.16.22/dist/katex.min.js"
+    data-pjaxintegrity="sha384-cMkvdD8LoxVzGF/RPUKAcvmm49FQ0oxwDF3BGKtDXcEc&#43;T1b2N&#43;teh/OJfpU0jr6" crossorigin="anonymous"></script><script
+    src="https://npm.webcache.cn/katex@0.16.22/dist/contrib/auto-render.min.js"
+    data-pjaxintegrity="sha384-hCXGrW6PitJEwbkoStFjeJxv&#43;fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous"></script><script data-pjax>
+          var renderMath = () => {
+            if (!window.renderMathInElement) return;
+            window.renderMathInElement(_$("article"), {
+              delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "\\[", right: "\\]", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+              ],
+            });
+          };
+          if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", renderMath, { once: true });
+          } else {
+            renderMath();
+          }
+        </script></div>
+</div><script
+    src="https://npm.webcache.cn/busuanzi@2.3.0/bsz.pure.mini.js"
+    asyncintegrity="sha384-0M75wtSkhjIInv4coYlaJU83&#43;OypaRCIq2SukQVQX04eGTCBXJDuWAbJet56id&#43;S" crossorigin="anonymous"></script><script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+  </script><script>
+  const reimuCopyright = String.raw`
+   ______     ______     __     __    __     __  __    
+  /\  == \   /\  ___\   /\ \   /\ "-./  \   /\ \/\ \   
+  \ \  __<   \ \  __\   \ \ \  \ \ \-./\ \  \ \ \_\ \  
+   \ \_\ \_\  \ \_____\  \ \_\  \ \_\ \ \_\  \ \_____\ 
+    \/_/ /_/   \/_____/   \/_/   \/_/  \/_/   \/_____/ 
+                                                    
+  `;
+  console.log(String.raw`%c ${reimuCopyright}`, "color: #ff5252;");
+  console.log(
+    "%c Theme.Reimu" + " %c https://github.com/D-Sketon/hugo-theme-reimu ",
+    "color: white; background: #ff5252; padding:5px 0;",
+    "padding:4px;border:1px solid #ff5252;",
+  );
+</script></body>
+</html>
